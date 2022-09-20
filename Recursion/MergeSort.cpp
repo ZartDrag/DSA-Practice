@@ -51,6 +51,7 @@ void merge(vector<int> &arr, int l, int h)
     {
         arr[i++] = secondArr[si++];
     }
+    dispArray(arr);
 }
 
 void altMerge(vector<int> &arr, int l, int h)
@@ -64,7 +65,7 @@ void altMerge(vector<int> &arr, int l, int h)
         {
             if (arr[j] > temp)
             {
-                arr[j + i] = arr[j];
+                arr[j + 1] = arr[j];
             }
             else
             {
@@ -90,7 +91,7 @@ void MergeSort(vector<int> &arr, int l, int h)
 
 int main()
 {
-    vector<int> arr = {1, 3, 2, 9, 1, 4, 5, 0};
+    vector<int> arr = {1, 3, 9, 2, 7, 2, 6};
     // initArray(arr);
     MergeSort(arr, 0, arr.size() - 1);
     dispArray(arr);
