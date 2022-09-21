@@ -1,6 +1,6 @@
 {
     "version": "0.2.0",
-    "miDebuggerPath": "/usr/bin/gdbus",
+    "miDebuggerPath": "c:/msys64/bin/gdbm_dump.exe",
     "configurations": [
         {
             "name": "C/C++: g++.exe build and debug active file",
