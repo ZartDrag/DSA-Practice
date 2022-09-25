@@ -1,0 +1,46 @@
+#include <bits/stdc++.h> 
+
+int maxSum(vector<int> &nums, int index, vector<int> &dp){
+    if(index>=nums.size()) return 0;
+    if(index==nums.size()-1) return nums[nums.size()-1];
+    if(dp[index]!=INT_MIN) return dp[index];
+    
+    int incAns=nums[index]+maxSum(nums, index+2, dp);
+    int excAns=maxSum(nums, index+1, dp);
+    
+    return dp[index]=max(incAns,excAns);
+}
+
+int Tablu(vector<int> &nums){
+    vector<int> dp(nums.size(), 0);
+    dp[0]=nums[0];
+    
+    for(int i=1; i<=nums.size(); i++){
+        int incAns=i>1?nums[i]+dp[i-2]:nums[i];
+        int excAns=dp[i-1];
+        dp[i]=max(incAns, excAns);
+    }
+    return dp[nums.size()-1];
+}
+
+int opti(vector<int> &nums){
+    if(nums.size()==1) return nums[0];
+    int prev1=nums[0], prev2=0;
+    
+    for(int i=1; i<nums.size(); i++){
+        int incAns=nums[i]+prev2;
+        int excAns=prev1;
+        int curr=max(incAns,excAns);
+        prev2=prev1;
+        prev1=curr;
+    }
+    
+    return prev1;    
+}
+int maximumNonAdjacentSum(vector<int> &nums){
+    // Write your code here.
+    return opti(nums);
+    return Tablu(nums);
+    vector<int> dp(nums.size(),INT_MIN);
+    return maxSum(nums, 0, dp);    
+}
