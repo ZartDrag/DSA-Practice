@@ -1,0 +1,37 @@
+#include<bits/stdc++.h>
+
+int memSolve(int n, int x, int y, int z, vector<int> &dp){
+    if(n==0) return 0;
+    if(n<0) return INT_MIN;
+    
+    if(dp[n]!=-1) return dp[n];
+    
+    int incX = 1+memSolve(n-x, x, y, z, dp);
+    int incY = 1+memSolve(n-y, x, y, z, dp);
+    int incZ = 1+memSolve(n-z, x, y, z, dp);
+    
+    return dp[n]=max(max(incX,incY),incZ);
+}
+
+int tabSolve(int n, int x, int y, int z){
+    vector<int> dp(n+1,INT_MIN);
+    dp[0]=0;
+    for(int i=1; i<=n; i++){
+        int incX = i>=x?(1+dp[i-x]):INT_MIN;
+        int incY = i>=y?(1+dp[i-y]):INT_MIN;
+        int incZ = i>=z?(1+dp[i-z]):INT_MIN;
+    
+        dp[i]=max(max(incX,incY),incZ);
+    }
+    return dp[n]<0?0:dp[n];
+}
+
+int cutSegments(int n, int x, int y, int z) {
+    // Write your code here.
+    
+    return tabSolve(n, x, y, z);
+    
+    vector<int> dp(n+1, -1);            //memoization
+    int ans=memSolve(n, x, y, z, dp);
+    return ans<0?0:ans;
+}

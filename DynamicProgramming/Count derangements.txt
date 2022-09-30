@@ -1,0 +1,44 @@
+#include<vector>
+#define MOD 1000000007
+long long memSolve(int n, vector<int> &dp){
+    if(n==1) return 0;
+    if(n==2) return 1;
+    
+    if(dp[n]!=-1) return dp[n];
+    
+    return dp[n]=((n-1)*(memSolve(n-2,dp)+memSolve(n-1,dp)))%MOD;
+}
+
+long long tabSolve(int n){
+    vector<long long int> dp(n+1, 0);
+    dp[1]=0;
+    dp[2]=1;
+    
+    for(int i=3; i<=n; i++){
+        dp[i]=((i-1)*(dp[i-1]+dp[i-2]))%MOD;
+    }    
+    
+    return dp[n];
+}
+
+long long opti(int n){
+    int long long prev1=1, prev2=0;
+    
+    for(int i=3; i<=n; i++){
+        long long int curr=((i-1)*(prev1+prev2))%MOD;
+        prev2=prev1;
+        prev1=curr;
+    }
+    
+    return prev1;
+}
+long long int countDerangements(int n) {
+    // Write your code here.
+    return opti(n);
+    
+    return tabSolve(n);            //Tabulation
+    
+    vector<int> dp(n+1,-1);        //Memoization
+    return(memSolve(n,dp));
+    
+}

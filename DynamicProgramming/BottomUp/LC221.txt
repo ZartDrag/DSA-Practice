@@ -1,0 +1,25 @@
+
+//Maximal Square
+class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& mat) {
+        int n=mat.size(), m=mat[0].size();
+        vector<int> currRow(m+1, 0), prevRow(m+1, 0);
+        int maxi=0;
+        for(int i=n-1; i>=0; i--){
+            for(int j=m-1; j>=0; j--){
+                int right=currRow[j+1];
+                int down=prevRow[j];
+                int diag=prevRow[j+1];
+                
+                if(mat[i][j]=='1'){
+                    currRow[j]=min(right,min(down,diag))+1;
+                    maxi=max(maxi,currRow[j]);
+                } else currRow[j]=0;
+            }
+            prevRow=currRow;
+        }
+        
+        return maxi*maxi;
+    }
+};

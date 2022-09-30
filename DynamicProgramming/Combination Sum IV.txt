@@ -1,0 +1,37 @@
+class Solution {
+    
+    int memSolve(vector<int>& nums, int n, vector<int> &dp){
+        if(n==0) return 1;
+        if(n<0) return 0;
+        
+        if(dp[n]!=-1) return dp[n];
+        
+        int count = 0;
+        
+        for(int i=0; i<nums.size(); i++){
+            count+=memSolve(nums, n-nums[i], dp);
+        }
+        
+        return dp[n]=count;
+    }
+    
+    int tabSolve(vector<int>& nums, int target){
+        vector<int> dp(target+1,0);
+        dp[0]=1;
+        for(int i=1; i<=target; i++){
+            for(int j=0; j<nums.size(); j++){
+                if(i>=nums[j])
+                    dp[i]=( (dp[i]%INT_MAX) + (dp[i-nums[j]]%INT_MAX) )%INT_MAX;
+            }
+        }
+        return dp[target];
+    }
+public:
+    int combinationSum4(vector<int>& nums, int target) {
+        
+        return tabSolve(nums, target);
+        
+        vector<int> dp(target+1,-1);
+        return memSolve(nums, target, dp);
+    }
+};

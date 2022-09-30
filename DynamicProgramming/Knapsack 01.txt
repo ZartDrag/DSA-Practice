@@ -1,0 +1,85 @@
+#include <bits/stdc++.h> 
+
+int memSolve(vector<int> weight, vector<int> value, int n, int W, vector<vector<int>> &dp){
+    if(n<0) return 0;
+    
+    if(dp[n][W]!=-1) return dp[n][W];
+    
+    if(weight[n]>W) return dp[n][W]=memSolve(weight, value, n-1, W, dp);
+    
+    return dp[n][W]=max(memSolve(weight, value, n-1, W, dp),
+                        value[n]+memSolve(weight, value, n-1, W-weight[n], dp));
+}
+
+int tabSolve(vector<int> weight, vector<int> value, int n, int W){
+    vector<vector<int>> dp(n,vector<int>(W+1,0));
+    
+    if(weight[0]<=W)
+        for(int i=weight[0]; i<=W; i++)
+            dp[0][i]=value[0];
+    
+    
+    for(int i=1; i<n; i++){
+        for(int w=0; w<=W; w++){
+            if(weight[i]>w) dp[i][w]=dp[i-1][w];
+            else dp[i][w]=max(dp[i-1][w],value[i]+dp[i-1][w-weight[i]]); 
+        }
+    }
+    
+    return dp[n-1][W];
+}
+
+int opti(vector<int> weight, vector<int> value, int n, int W){
+    vector<int> prev(W+1,0), curr(W+1,0);
+    
+    if(weight[0]<=W)
+        for(int i=weight[0]; i<=W; i++)
+            prev[i]=value[0];
+    
+    
+    for(int i=1; i<n; i++){
+        for(int w=0; w<=W; w++){
+            int inc=0;
+            if(weight[i]<=w) inc=value[i]+prev[w-weight[i]];
+            int exc = prev[w];
+            curr[w]=max(inc,exc);             
+        }
+        prev=curr;
+    }
+    
+    return prev[W];
+}
+
+int opti2(vector<int> weight, vector<int> value, int n, int W){
+    vector<int> curr(W+1,0);
+    
+    if(weight[0]<=W)
+        for(int i=weight[0]; i<=W; i++)
+            curr[i]=value[0];
+    
+    
+    for(int i=1; i<n; i++){
+        for(int w=W; w>=0; w--){
+            int inc=0;
+            if(weight[i]<=w) inc=value[i]+curr[w-weight[i]];
+            int exc = curr[w];
+            curr[w]=max(inc,exc);             
+        }
+    }
+    
+    return curr[W];
+}
+
+int knapsack(vector<int> weight, vector<int> value, int n, int maxWeight) 
+{
+	// Write your code here
+    return opti2(weight, value, n, maxWeight);
+    
+    return opti(weight, value, n, maxWeight);
+    
+    return tabSolve(weight, value, n, maxWeight);
+    
+    vector<vector<int>> dp(n,vector<int>(maxWeight+1,-1));
+    return memSolve(weight, value, n-1, maxWeight, dp);
+    
+}
