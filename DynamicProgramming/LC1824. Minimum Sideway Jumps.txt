@@ -1,0 +1,75 @@
+class Solution {
+    int memSolve(vector<int> &obs, int pos, int lane, vector<vector<int>> &dp){
+        int n=obs.size()-1;
+        if(pos==n) return 0;
+        if(dp[pos][lane]!=-1) return dp[pos][lane];
+        
+        if(obs[pos+1] != lane) return memSolve(obs, pos+1, lane, dp);
+        
+        dp[pos][lane]=INT_MAX;
+        
+        for(int i=1; i<=3; i++){
+            if(lane!=i && obs[pos]!=i) dp[pos][lane]=min(dp[pos][lane],1+memSolve(obs, pos, i, dp));
+        }
+        return dp[pos][lane];
+    }
+    
+    int tabSolve(vector<int> obs){
+        int n=obs.size()-1;
+        vector<vector<int>> dp(n+1, vector<int>(4,0));
+        
+        for(int pos=n-1; pos>=0; pos--){
+            
+            for(int lane=1; lane<=3; lane++){
+                if(obs[pos+1] != lane) dp[pos][lane] = dp[pos+1][lane];
+                else{
+                    dp[pos][lane]=INT_MAX;
+        
+                    for(int i=1; i<=3; i++){
+                        if(lane!=i && obs[pos]!=i) 
+                            dp[pos][lane]=min(dp[pos][lane], 1+dp[pos+1][i]);
+                    }
+                }
+            }
+        }
+        
+        return min(dp[0][1]+1, min(dp[0][2], dp[0][3]+1));        
+    }
+    
+    int opti(vector<int> obs){
+        int n=obs.size()-1;
+        int next[]={0,0,0,0}, curr[]={0,0,0,0};
+        
+        for(int pos=n-1; pos>=0; pos--){
+            
+            for(int lane=1; lane<=3; lane++){
+                if(obs[pos+1] != lane) curr[lane] = next[lane];
+                else{
+                    curr[lane]=INT_MAX;
+        
+                    for(int i=1; i<=3; i++){
+                        if(lane!=i && obs[pos]!=i) 
+                            curr[lane]=min(curr[lane], 1+next[i]);
+                    }
+                }
+            }
+            
+            copy(curr, curr+4, next);
+        }
+        
+        return min(curr[1]+1, min(curr[2], curr[3]+1));         
+    }
+    
+    
+public:
+    int minSideJumps(vector<int>& obstacles) {
+        
+        return opti(obstacles);
+        
+        return tabSolve(obstacles);
+        
+        vector<vector<int>> dp(obstacles.size(), vector<int>(4,-1));
+        
+        return memSolve(obstacles, 0, 2, dp);
+    }
+};
