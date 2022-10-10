@@ -1,0 +1,146 @@
+//{ Driver Code Starts
+#include<bits/stdc++.h>
+using namespace std;
+
+// } Driver Code Ends
+
+
+class Solution
+{
+    int memSolve(int a[], int n, int i, int el, vector<vector<int>> &dp){
+        if(i==n) return 0;
+        if(dp[i][el+1]!=-1) return dp[i][el+1];
+        
+        int exc = memSolve(a, n, i+1, el, dp);
+        int inc = -1;
+        if(el==-1 || a[i]>a[el]) inc=memSolve(a, n, i+1, i, dp)+1;
+        return dp[i][el+1]=max(exc, inc);
+    }
+    
+    int tabSolve(int a[], int n){
+        vector<vector<int>> dp(n+1, vector<int>(n+1, 0));
+        
+        for(int i=n-1; i>=0; i--){
+            for(int el=i-1; el>=-1; el--){
+                int exc = dp[i+1][el+1];
+                int inc = -1;
+                if(el==-1 || a[i]>a[el]) inc=dp[i+1][i+1]+1;
+                dp[i][el+1]=max(exc, inc);
+            }
+        }
+        
+        return dp[0][0];
+    }
+    
+    int opti(int a[], int n){
+        vector<int> curr(n+1, 0), next(n+1, 0);
+        
+        for(int i=n-1; i>=0; i--){
+            for(int el=i-1; el>=-1; el--){
+                int exc = next[el+1];
+                int inc = -1;
+                if(el==-1 || a[i]>a[el]) inc=next[i+1]+1;
+                curr[el+1]=max(exc, inc);
+            }
+            next=curr;
+        }
+        
+        return curr[0];
+    }
+    
+    int optiMost(int a[], int n){
+        vector<int> arr;
+        arr.push_back(a[0]);
+        for(int i=1; i<n; i++){
+            if(a[i]>arr.back()) arr.push_back(a[i]);
+            else{
+                for(int j=0; j<arr.size(); j++){
+                    if(arr[j]>a[i]){ 
+                        arr[j]=a[i];
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return arr.size();
+    }
+    
+    int optiMostBinary(int a[], int n){
+        vector<int> arr;
+        arr.push_back(a[0]);
+        for(int i=1; i<n; i++){
+            if(a[i]>arr.back()) arr.push_back(a[i]);
+            else{
+                int l=0, h=arr.size()-1;
+                int ans=-1;
+                while(l<=h){
+                    int mid=l+(h-l)/2;
+                    if(arr[mid]>a[i]){
+                        ans=mid;
+                        h=mid-1;
+                    } else l=mid+1;
+                }
+                if(ans!=-1) arr[ans]=a[i];
+            }
+        }
+        
+        return arr.size();
+    }
+    
+    int optiMostBinary2(int a[], int n){
+        vector<int> arr;
+        arr.push_back(a[0]);
+        for(int i=1; i<n; i++){
+            if(a[i]>arr.back()) arr.push_back(a[i]);
+            else{
+                int ans = lower_bound(arr.begin(), arr.end(), a[i]) - arr.begin();
+                arr[ans]=a[i];
+            }
+        }
+        
+        return arr.size();
+    }
+    
+    public:
+    //Function to find length of longest increasing subsequence.
+    int longestSubsequence(int n, int a[])
+    {
+       // your code here
+       return optiMostBinary2(a, n);
+       
+       return optiMostBinary(a, n);
+       
+       return optiMost(a, n);
+       
+       return opti(a, n);
+       
+       return tabSolve(a, n);
+       
+       vector<vector<int>> dp(n, vector<int>(n+1, -1));
+       return memSolve(a, n, 0, -1, dp);
+    }
+};
+
+//{ Driver Code Starts.
+int main()
+{
+    //taking total testcases
+    int t,n;
+    cin>>t;
+    while(t--)
+    {
+        //taking size of array
+        cin>>n;
+        int a[n];
+        
+        //inserting elements to the array
+        for(int i=0;i<n;i++)
+            cin>>a[i];
+        Solution ob;
+        //calling method longestSubsequence()
+        cout << ob.longestSubsequence(n, a) << endl;
+    }
+}
+
+// } Driver Code Ends
