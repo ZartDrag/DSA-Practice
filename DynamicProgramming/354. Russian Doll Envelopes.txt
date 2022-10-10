@@ -1,0 +1,62 @@
+class Solution {
+    int partition(vector<vector<int>>& env, int low, int high){
+        int pivot = high;
+        int i=low;
+        
+        for(int j=i; j<high; j++){
+            if(env[j][0]<env[pivot][0]){
+                swap(env[i],env[j]);
+                i++;
+            } else if(env[j][0]==env[pivot][0]){
+                if(env[j][1]>=env[pivot][1]){
+                    swap(env[i],env[j]);
+                    i++;    
+                }
+            }
+        }
+        
+        swap(env[pivot],env[i]);
+        return i;
+        
+    }
+    
+    void quickSortEnv(vector<vector<int>>& env, int low, int high){     
+        if(low>high) return;
+        
+        int pivot=partition(env, low, high);
+        
+        quickSortEnv(env, low, pivot-1);
+        quickSortEnv(env, pivot+1, high);
+    }
+    
+    static bool custSort(vector<int> &a, vector<int> &b){
+        if(a[0]==b[0]) return a[1]>b[1];
+        return a[0]<b[0];
+    }
+    
+    void disp(vector<vector<int>>& env){
+        for(vector<int> v:env){
+            cout<<v[0]<<","<<v[1]<<" ";
+        }
+        cout<<endl;
+    }
+public:
+    int maxEnvelopes(vector<vector<int>>& env) {
+        int n=env.size();
+        // quickSortEnv(env, 0, n-1);       //TLE :(
+        sort(env.begin(), env.end(), custSort);
+        
+        vector<int> arr;
+        arr.push_back(env[0][1]);
+        
+        for(int i=1; i<n; i++){
+            if(env[i][1]>arr.back())
+                arr.push_back(env[i][1]);
+            else{
+                int ans=lower_bound(arr.begin(), arr.end(), env[i][1]) - arr.begin();
+                arr[ans]=env[i][1];
+            }
+        }
+        return arr.size();
+    }
+};
