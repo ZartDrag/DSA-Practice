@@ -1,0 +1,89 @@
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+// } Driver Code Ends
+class Solution {
+    long long memSolve(int M, int N, int X, vector<vector<long long>> &dp){ //memoization
+        if(X==0 && N==0) return 1;      //If the target is reached with the last die, 
+                                        //count that case
+                                        
+        if(X<0 || N==0) return 0;       //if the sum exceeds the target or all the dice 
+                                        //have been rolled, dont count that case
+        
+        if(dp[X][N]!=-1) return dp[X][N];       //if the solution has already been computed, 
+                                                //return the stored value
+        
+        dp[X][N]=0;                             //store the computed answers in a vector
+        
+        for(int i=1; i<=M; i++){                //compute all the possible numbers on the die
+            dp[X][N]+=memSolve(M, N-1, X-i, dp);
+        }
+        
+        return dp[X][N];
+    }
+    
+    long long tabSolve(int M , int n , int x){
+        vector<vector<long long>> dp(x+1, vector<long long>(n+1, 0));
+        dp[0][0]=1;
+        
+        for(int X=1; X<=x; X++){
+            for(int N=1; N<=n; N++){
+                
+                for(int i=1; i<=M; i++){ 
+                    if(X-i>=0)
+                        dp[X][N]+=dp[X-i][N-1];
+                }
+                
+            }
+        }
+        
+        return dp[x][n];
+    }
+    
+    long long opti(int M , int n , int x){
+        vector<long long> curr(x+1, 0), prev(x+1, 0);
+        prev[0]=1;
+        
+        for(int N=1; N<=n; N++){
+            for(int X=1; X<=x; X++){
+                curr[X]=0;
+                for(int i=1; i<=M; i++){ 
+                    if(X-i>=0)
+                        curr[X]+=prev[X-i];
+                }
+                
+            }
+            prev=curr;
+        }
+        
+        return curr[x];
+    }
+    
+  public:
+    long long noOfWays(int M , int N , int X) {
+        // code here
+        return opti(M, N, X);
+        
+        return tabSolve(M, N, X);
+        
+        vector<vector<long long>> dp(X+1, vector<long long>(N+1, -1));
+        return memSolve(M, N, X, dp);
+    }
+};
+
+//{ Driver Code Starts.
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int M,N,X;
+        
+        cin>>M>>N>>X;
+
+        Solution ob;
+        cout << ob.noOfWays(M,N,X) << endl;
+    }
+    return 0;
+}
+// } Driver Code Ends
