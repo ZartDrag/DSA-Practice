@@ -1,0 +1,68 @@
+class Solution {
+    int memSolve(vector<int> &sat, int index, int time, vector<vector<int>> &dp){
+        if(index == sat.size()) return 0;
+        if(dp[index][time]!=-1) return dp[index][time];
+        
+        int ans1 = memSolve(sat, index+1, time, dp);                        //exclude
+        int ans2 = sat[index]*(1+time)+memSolve(sat, index+1, 1+time, dp);    //include
+        
+        return dp[index][time]=max(ans1, ans2);
+    }
+    
+    int tabSolve(vector<int> &sat){
+        int n=sat.size();
+        vector<vector<int>> dp(n+1, vector<int>(n+1, 0));
+        
+        for(int i=n-1; i>=0; i--){
+            for(int j=n-1; j>=0; j--){
+                int ans1 = dp[i+1][j];
+                int ans2 = sat[i]*(j+1)+dp[i+1][j+1];
+                dp[i][j]=max(ans1, ans2);
+            }
+        }
+        return dp[0][0];
+    }
+    
+    int opti(vector<int> &sat){
+        int n=sat.size();
+        vector<int> curr(n+1, 0), next(n+1, 0);
+        
+        for(int i=n-1; i>=0; i--){
+            for(int j=n-1; j>=0; j--){
+                int ans1 = next[j];
+                int ans2 = sat[i]*(j+1)+next[j+1];
+                curr[j]=max(ans1, ans2);
+            }
+            next=curr;
+        }
+        return curr[0];
+    }
+    
+    int opti2(vector<int> &sat){
+        int n=sat.size();
+        vector<int> curr(n+1, 0);
+        
+        for(int i=n-1; i>=0; i--){
+            for(int j=0; j<n; j++){
+                int ans2 = sat[i]*(j+1)+curr[j+1];
+                curr[j]=max(curr[j], ans2);
+            }
+        }
+        return curr[0];
+    }
+    
+public:
+    int maxSatisfaction(vector<int>& satisfaction) {
+        sort(satisfaction.begin(), satisfaction.end());
+        
+        return opti2(satisfaction);
+        
+        return opti(satisfaction);
+        
+        return tabSolve(satisfaction);
+        
+        int n=satisfaction.size();
+        vector<vector<int>> dp(n, vector<int>(n, -1));
+        return memSolve(satisfaction, 0, 0, dp);
+    }
+};
