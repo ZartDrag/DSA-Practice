@@ -1,0 +1,96 @@
+//801. Minimum Swaps To Make Sequences Increasing
+
+// https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/
+
+class Solution {
+    
+    int memSolve(vector<int>& nums1, vector<int>& nums2, int ind, bool swapped, vector<vector<int>> &dp){ 
+                                            //swapped tells if the prev instance was swapped or not
+        if(ind==nums2.size()) return 0;
+        if(dp[ind][swapped]!=-1) return dp[ind][swapped];
+        
+        int prev1 = nums1[ind-1], prev2 = nums2[ind-1];       
+        if(swapped) swap(prev1,prev2);      //if the array was swapped in the prev instance, the values of prev1
+                                            //and prev2 need to be swapped too        
+        int ans=INT_MAX;
+        
+        //not swapping
+        if(prev1<nums1[ind] && prev2<nums2[ind])  
+            ans=memSolve(nums1, nums2, ind+1, 0, dp);
+        
+        //swapping
+        if(prev1<nums2[ind] && prev2<nums1[ind])
+            ans=min(ans, 1+memSolve(nums1, nums2, ind+1, 1, dp));
+        
+        return dp[ind][swapped]=ans;        
+    }
+    
+    int tabSolve(vector<int> nums1, vector<int> nums2){ 
+        int n=nums1.size();
+        vector<vector<int>> dp(n+1, {0, 0});
+        
+        for(int ind=n-1; ind>=1; ind--){
+        
+            for(int swapped = 1; swapped>=0; swapped--){
+                int prev1 = nums1[ind-1], prev2 = nums2[ind-1];
+
+                if(swapped) swap(prev1, prev2);             
+                
+                dp[ind][swapped]=INT_MAX;
+
+                //not swapping
+                if(prev1<nums1[ind] && prev2<nums2[ind])  
+                    dp[ind][swapped]=dp[ind+1][0];
+
+                //swapping
+                if(prev1<nums2[ind] && prev2<nums1[ind])
+                    dp[ind][swapped]=min(dp[ind][swapped], 1+dp[ind+1][1]);
+            }
+        }
+        
+        return dp[1][0];        
+    }
+    
+    int opti(vector<int> nums1, vector<int> nums2){ 
+        int n=nums1.size();
+        vector<int> curr({0, 0}), next({0, 0});
+        
+        
+        for(int ind=n-1; ind>=1; ind--){
+        
+            for(int swapped = 1; swapped>=0; swapped--){
+                int prev1 = nums1[ind-1], prev2 = nums2[ind-1];
+
+                if(swapped) swap(prev1, prev2);             
+                
+                curr[swapped]=INT_MAX;
+
+                //not swapping
+                if(prev1<nums1[ind] && prev2<nums2[ind])  
+                    curr[swapped]=next[0];
+
+                //swapping
+                if(prev1<nums2[ind] && prev2<nums1[ind])
+                    curr[swapped]=min(curr[swapped], 1+next[1]);
+            }
+            next=curr;
+        }
+        
+        return curr[0];        
+    }
+    
+public:
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        nums1.insert(nums1.begin(), -1);            //added -1 to begining of the arrays so that prev1 and prev2
+        nums2.insert(nums2.begin(), -1);            //wouldn't be invalid for ind=0      
+        
+        return opti(nums1, nums2);
+        
+        return tabSolve(nums1, nums2);
+        
+        int n=nums2.size();
+        vector<vector<int>> dp(n+1, {-1, -1} );
+        
+        return memSolve(nums1, nums2, 1, 0, dp);
+    }
+};
