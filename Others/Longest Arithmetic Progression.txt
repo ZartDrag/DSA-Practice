@@ -1,0 +1,26 @@
+class Solution{ 
+public:
+    int lengthOfLongestAP(int A[], int n) {
+        // code here
+        if(n==1) return 1;
+        int ans=0;
+        for(int i=0; i<n; i++){
+            for(int j=i+1; j<n; j++){   //choose 2 elements to be the last 2 elements of the AP
+                int diff = A[j]-A[i];   //the difference between the two would be the common d
+                int curr=A[i];          //let the 2nd last element be 
+                                        //the first element of the AP for now
+                int cnt=2;              //the length of the current AP is 2 
+                
+                for(int k=i-1; k>=0; k--){  //run of loop from the current 
+                                            //first element in the AP to the start of the array
+                    if(curr-A[k]==diff){    //if the current element satisfies the conditions of the Ap
+                        cnt++;              //update length of the AP
+                        curr=A[k];          //set the current element as the new first element of the AP
+                    }
+                }
+                ans=max(ans, cnt);          
+            }
+        }
+        return ans;
+    }
+};
