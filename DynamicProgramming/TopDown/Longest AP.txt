@@ -1,0 +1,28 @@
+int memSolve(int A[], int n, int ind, int d, vector<unordered_map<int, int>> &dp){
+        if(ind<0) return 0;
+        if(dp[ind].count(d)) return dp[ind][d];
+        int ans=0;
+        for(int k=ind-1; k>=0; k--){
+            if(A[ind]-A[k]==d)
+                ans=max(ans, 1+memSolve(A, n, k, d, dp));   
+        }
+        return dp[ind][d]=ans;
+    }
+    
+int lengthOfLongestAP(int A[], int n) {
+        // code here
+        if(n<3) return n;
+        
+        int ans=0;
+        vector<unordered_map<int, int>> dp(n+1);
+        for(int i=0; i<n; i++){
+            for(int j=i+1; j<n; j++){
+                int d=A[j]-A[i];
+                ans=max(ans, 2+memSolve(A, n, i, d, dp));
+            }
+        }
+        
+        return ans;
+        
+        return maiSol(A, n);
+    }
