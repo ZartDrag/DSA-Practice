@@ -1,0 +1,117 @@
+class Solution {
+    
+    int opti(vector<int> & prices, int k){
+        int n=prices.size();
+        vector<vector<int>> curr(2, vector<int>(k+1, 0)), next(2, vector<int>(k+1, 0)); 
+        
+        for(int ind = n-1; ind>=0; ind--){
+            for(int buy = 0; buy<=1; buy++){
+                for(int sellRem = 1; sellRem<=k; sellRem++){
+                    int exc = next[buy][sellRem];
+        
+                    int inc;
+
+                    if(buy){    //if buying is allowed
+                        inc = next[0][sellRem] - prices[ind];            //buying    
+                    } else {
+                        inc = next[1][sellRem-1] + prices[ind];          //selling
+                    }
+                    
+                    
+                    curr[buy][sellRem]=max(inc, exc);
+                }
+            }
+            next = curr;
+        }        
+        return curr[1][k];
+    }
+    
+    //another approach:
+    
+    int memSolve(vector<int> &prices, int ind, int opNo, vector<vector<int>> &dp){   
+                                                //opNo tells the number of operations left
+        int n=prices.size();
+        
+        if(ind == n || opNo == 0) return 0;             //if 0 operations are left, return 0
+        
+        if(dp[ind][opNo]!=-1) return dp[ind][opNo];
+        
+        int exc = memSolve(prices, ind+1, opNo, dp);        //if the current index is skipped
+        
+        int price = 0;
+        
+        if(opNo%2){     //if opNo is odd, a stock is being held so it should be sold
+            price+=prices[ind];     //when selling the price would be positive 
+        } else {        //if opNo is even, stock could be bought
+            price-=prices[ind];     //when buying, price would be deducted so its negative
+        }
+        
+        int inc = memSolve(prices, ind+1, opNo-1, dp) + price;  //if current index is included
+        
+        return dp[ind][opNo]=max(inc, exc);
+    }
+    
+    int tabSolve(vector<int> &prices, int k){
+        int n=prices.size();
+        vector<vector<int>> dp(n+1, vector<int>(2*k+1, 0));
+        
+        for(int ind = n-1; ind>=0; ind--){
+            for(int opNo = 1; opNo<=2*k; opNo++){
+                int exc = dp[ind+1][opNo];       //if the current index is skipped
+        
+                int price = 0;
+
+                if(opNo%2){     //if opNo is odd, a stock is being held so it should be sold
+                    price+=prices[ind];     //when selling the price would be positive 
+                } else {        //if opNo is even, stock could be bought
+                    price-=prices[ind];     //when buying, price would be deducted so its negative
+                }
+
+                int inc = dp[ind+1][opNo-1] + price;  //if current index is included
+
+                dp[ind][opNo]=max(inc, exc);  
+            }
+        }
+        return dp[0][2*k];               
+    }
+    
+    int opti2(vector<int> &prices, int k){
+        int n=prices.size();
+        vector<int> curr(2*k+1, 0), next(2*k+1, 0);
+        
+        for(int ind = n-1; ind>=0; ind--){
+            for(int opNo = 1; opNo<=2*k; opNo++){
+                int exc = next[opNo];       //if the current index is skipped
+        
+                int price = 0;
+
+                if(opNo%2){     //if opNo is odd, a stock is being held so it should be sold
+                    price+=prices[ind];     //when selling the price would be positive 
+                } else {        //if opNo is even, stock could be bought
+                    price-=prices[ind];     //when buying, price would be deducted so its negative
+                }
+
+                int inc = next[opNo-1] + price;  //if current index is included
+
+                curr[opNo]=max(inc, exc);  
+            }
+            next=curr;
+        }
+        return curr[2*k];               
+    }
+    
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        
+        return opti2(prices, k);
+        
+        // return tabSolve(prices, k);
+        
+        // int n=prices.size();
+        // vector<vector<int>> dp(n, vector<int>(2*k+1, -1));
+        // return memSolve(prices, 0, 2*k, dp);    //totals operations are 2k since stocks would be bought k 
+                                                //times and sold k times too
+        
+        // return opti(prices, k);       
+    }
+};

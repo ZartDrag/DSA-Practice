@@ -1,0 +1,27 @@
+class Solution {
+    int opti(string text1, string text2){
+        int m = text1.length(), n = text2.length();
+        // vector<vector<int>> dp(m+1, vector<int>(n+1, 0));
+        vector<int> curr(n+1, 0), next(n+1, 0);
+        
+        for(int i=m-1; i>=0; i--){
+            for(int j=n-1; j>=0; j--){
+                if(text1[i] == text2[j]){
+                    curr[j]=1+next[j+1];
+                } else {
+                    curr[j]=max(next[j], 
+                                        curr[j+1]);
+                }
+            }
+            next=curr;
+        }
+        
+        return curr[0];
+    }
+public:
+    int longestPalindromeSubseq(string s) {
+        string r = s;
+        reverse(r.begin(), r.end());
+        return opti(s, r);
+    }
+};

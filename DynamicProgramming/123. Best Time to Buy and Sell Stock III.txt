@@ -1,0 +1,85 @@
+class Solution {
+    
+    int memSolve(vector<int> & prices, int ind, int buy, int sellRem, vector<vector<vector<int>>> &dp){
+        int n=prices.size();
+        if(ind == n || sellRem==0) return 0;      
+        
+        if(dp[ind][buy][sellRem]!=-1) return dp[ind][buy][sellRem];
+        
+        int exc = memSolve(prices, ind+1, buy, sellRem, dp);
+        
+        int inc;
+        
+        if(buy){    //if buying is allowed
+            inc = memSolve(prices, ind+1, 0, sellRem, dp) - prices[ind];            //buying    
+        } else {
+            inc = memSolve(prices, ind+1, 1, sellRem-1, dp) + prices[ind];          //selling
+        }
+        
+        return dp[ind][buy][sellRem]=max(inc, exc);
+    }
+    
+    int tabSolve(vector<int> & prices){
+        int n=prices.size();
+        vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(2, vector<int>(3, 0))); 
+        
+        for(int ind = n-1; ind>=0; ind--){
+            for(int buy = 0; buy<=1; buy++){
+                for(int sellRem = 1; sellRem<=2; sellRem++){
+                    int exc = dp[ind+1][buy][sellRem];
+        
+                    int inc;
+
+                    if(buy){    //if buying is allowed
+                        inc = dp[ind+1][0][sellRem] - prices[ind];            //buying    
+                    } else {
+                        inc = dp[ind+1][1][sellRem-1] + prices[ind];          //selling
+                    }
+                    
+                    dp[ind][buy][sellRem]=max(inc, exc);
+                }
+            }
+        }        
+        return dp[0][1][2];
+    }
+    
+    int opti(vector<int> & prices){
+        int n=prices.size();
+        vector<vector<int>> curr(2, vector<int>(3, 0)), next(2, vector<int>(3, 0)); 
+        
+        for(int ind = n-1; ind>=0; ind--){
+            for(int buy = 0; buy<=1; buy++){
+                for(int sellRem = 1; sellRem<=2; sellRem++){
+                    int exc = next[buy][sellRem];
+        
+                    int inc;
+
+                    if(buy){    //if buying is allowed
+                        inc = next[0][sellRem] - prices[ind];            //buying    
+                    } else {
+                        inc = next[1][sellRem-1] + prices[ind];          //selling
+                    }
+                    
+                    
+                    curr[buy][sellRem]=max(inc, exc);
+                }
+            }
+            next = curr;
+        }        
+        return curr[1][2];
+    }
+    
+public:
+    int maxProfit(vector<int>& prices) {
+        
+        return opti(prices);
+        
+        
+        // return tabSolve(prices);
+        
+//         int n = prices.size();
+//         vector<vector<vector<int>>> dp(n, vector<vector<int>>(2, vector<int>(3, -1))); 
+//         return memSolve(prices, 0, 1, 2, dp);
+        
+    }
+};

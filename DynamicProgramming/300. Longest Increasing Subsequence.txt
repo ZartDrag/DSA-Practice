@@ -1,0 +1,83 @@
+class Solution {
+    
+    int memSolve(vector<int>& nums, int ind, int elt, vector<vector<int>> &dp){
+        //ind is the current index and elt is the last element that is being included in the 
+        //subsequence
+        
+        int n=nums.size();
+        if(ind==n) return 0;
+        
+        if(dp[ind][elt+1]!=-1) return dp[ind][elt+1];
+        //the case where we're not including the current element
+        int exc = memSolve(nums, ind+1, elt, dp);   //index is incremented but elt is same
+        int inc=0;
+        //checking if we can include the element
+        if(elt==-1 || nums[ind]>nums[elt])
+            inc = memSolve(nums, ind+1, ind, dp)+1; //index is incremented and the current element 
+                                                    //becomes the last element in the subsequence
+        
+        return dp[ind][elt+1]=max(inc, exc);    //1 is added to elt because it is -1 in case there is 
+                                                //no element in the subsequence
+    }
+    
+    int tabSolve(vector<int>& nums){
+        int n=nums.size();
+        vector<vector<int>> dp(n+1, vector<int>(n+1, 0));
+        
+        for(int ind=n-1; ind>=0; ind--){
+            for(int elt=ind-1; elt>=-1; elt--){ //elt cannot exceed ind since its the prev element
+                                                
+                //since elt goes to -1, 1 needs to be added to elt everywhere it is used...
+                
+                int exc = dp[ind+1][elt+1];     //when current element is not included, current element
+                                                //ind is incremented but elt remains the same
+                
+                int inc = 0;
+                
+                if(elt==-1 || nums[ind]>nums[elt])
+                    inc = dp[ind+1][ind+1]+1;
+                
+                dp[ind][elt+1]=max(inc, exc);
+            }
+        }
+        
+        return dp[0][0];
+    }
+    
+    int opti(vector<int>& nums){
+        int n=nums.size();
+        vector<int> curr(n+1, 0), next(n+1, 0);
+        
+        for(int ind=n-1; ind>=0; ind--){
+            for(int elt=ind-1; elt>=-1; elt--){ //elt cannot exceed ind since its the prev element
+                                                
+                //since elt goes to -1, 1 needs to be added to elt everywhere it is used...
+                
+                int exc = next[elt+1];     //when current element is not included, current element
+                                                //ind is incremented but elt remains the same
+                
+                int inc = 0;
+                
+                if(elt==-1 || nums[ind]>nums[elt])
+                    inc = next[ind+1]+1;
+                
+                curr[elt+1]=max(inc, exc);
+            }
+            next = curr;
+        }
+        
+        return curr[0];
+    }
+    
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        
+        return opti(nums);
+        
+        // return tabSolve(nums);
+        
+        // int n=nums.size();
+        // vector<vector<int>> dp(n, vector<int>(n+1, -1));
+        // return memSolve(nums, 0, -1, dp);
+    }
+};
