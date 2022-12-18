@@ -1,0 +1,33 @@
+class Solution {
+    pair<long, long> getOperands(stack<long> &stk){
+        long a = stk.top();
+        stk.pop();
+        long b = stk.top();
+        stk.pop();
+        return make_pair(b, a);
+    }
+
+public:
+    int evalRPN(vector<string>& tokens) {
+        stack<long> stk;
+        for(string str : tokens){
+            if(str == "+"){
+                pair<long, long> oper = getOperands(stk);
+                stk.push(oper.first + oper.second);
+            } else if(str == "-"){
+                pair<long, long> oper = getOperands(stk);
+                stk.push(oper.first - oper.second);
+            } else if(str == "*"){
+                pair<long, long> oper = getOperands(stk);
+                stk.push(oper.first * oper.second);
+            } else if(str == "/"){
+                pair<long, long> oper = getOperands(stk);
+                stk.push(oper.first / oper.second);
+            } else {
+                stk.push(stoi(str));
+            }
+        }
+
+        return stk.top();
+    }
+};

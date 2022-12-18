@@ -1,0 +1,70 @@
+class Solution {
+    // int robHouses(vector<int> &nums, int ind, vector<int> &visitedHouses){
+    //     if(ind<0)
+    //         return 0;
+        
+    //     if(visitedHouses[ind]!=-1)
+    //         return visitedHouses[ind];
+
+    //     int excHouse = robHouses(nums, ind-1, visitedHouses);
+    //     //if this house is skipped, the next house can be robbed
+    //     int incHouse = nums[ind] + robHouses(nums, ind-2, visitedHouses);
+    //     //if this house is robbed, next house cannot be robbed so skipping it;
+
+    //     return visitedHouses[ind] = max(incHouse, excHouse);
+    // }
+
+    // int tabulation(vector<int> &nums){
+
+    //     vector<int> visitedHouses(nums.size(), 0);
+
+    //     int n = nums.size();
+    //     visitedHouses[0]=nums[0];
+    //     if(n>1)
+    //         visitedHouses[1]=max(nums[0],nums[1]);
+    //     for(int ind=2; ind<n; ind++){
+    //         int excHouse = visitedHouses[ind-1];
+    //         //if this house is skipped, the next house can be robbed
+    //         int incHouse = nums[ind] + visitedHouses[ind-2];
+    //         //if this house is robbed, next house cannot be robbed so skipping it;
+
+    //         visitedHouses[ind] = max(incHouse, excHouse); 
+    //     }
+    //     return visitedHouses[n-1];
+    // }
+
+    int opti(vector<int> &nums){
+
+        int curr=0, prev1=0, prev2=0;
+
+        int n = nums.size();
+        prev2=nums[0];
+
+        if(n==1)
+            return prev2;
+
+        prev1=max(nums[0], nums[1]);
+        for(int ind=2; ind<n; ind++){
+            int excHouse = prev1;
+            //if this house is skipped, the next house can be robbed
+            int incHouse = nums[ind] + prev2;
+            //if this house is robbed, next house cannot be robbed so skipping it;
+
+            curr = max(incHouse, excHouse); 
+
+            prev2=prev1;
+            prev1=curr;
+        }
+        return prev1;
+    }
+
+public:
+    int rob(vector<int>& nums) {
+        // vector<int> visitedHouses(nums.size(), -1);
+        // return robHouses(nums, nums.size()-1, visitedHouses);
+
+        // return tabulation(nums);
+
+        return opti(nums);
+    }
+};

@@ -1,0 +1,42 @@
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temp) {
+        //the bottom of the stack would contain the largest element encountered so far
+        stack<pair<int, int>> stk;    
+        //stack would contain the temp of a day and the no. of days until a warmer temp is reached    
+        int n = temp.size();
+        vector<int> ans(n, 0);
+        
+        for(int i=n-1; i>=0; i--){
+            int count = 1;  
+            //count keeps tracks of the no. of days until a warmer day is reached
+            //it starts from one since the algo begins checking from the next day
+            while(!stk.empty()){
+                if(stk.top().first>temp[i]){
+                    //if a day with higher temp is encountered
+                    stk.push(make_pair(temp[i], count));
+                    //the day along with count is pushed into the stack
+                    ans[i] = count;
+                    //the count of days is pushed into the answer array
+                    break;
+                    //break out of the while loop 
+                }
+
+                //if the current day's temp is higher than the top element, 
+                //then the top days's count is added to the current day's count
+                count+=stk.top().second;
+                //the day below the top day would be of higher temperature... it is then compared 
+                //with the current day                
+                stk.pop();
+                //the top element is then removed. Since the current day has higher temp, it would end up at the top
+                //of the stack
+            }
+
+            if(stk.empty()){    //this statement is only reached if no greater element is found 
+                stk.push(make_pair(temp[i], 0));
+                //push current element with 0
+            }            
+        }
+        return ans;
+    }
+};

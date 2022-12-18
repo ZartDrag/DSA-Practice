@@ -1,0 +1,101 @@
+//{ Driver Code Starts
+//
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Node
+{
+	int data;
+	struct Node *left;
+	struct Node *right;
+	
+	Node(int x){
+	    data = x;
+	    left = NULL;
+	    right = NULL;
+	}
+};
+
+
+void printPostOrder(Node *root)
+{
+	if(root==NULL)
+		return;
+	printPostOrder(root->left);
+	printPostOrder(root->right);
+	cout<<root->data<<" ";
+}
+
+// } Driver Code Ends
+
+
+/*Complete the code here.
+Node is as follows:
+struct Node
+{
+  int data;
+  Node* left;
+  Node* right;
+};
+*/
+class Solution{
+    Node* traverse(int in[], int pre[], int n, int &index, int inStart, int inEnd, unordered_map<int, int> &mp){
+        if(index>=n || inStart > inEnd)
+            return NULL;
+        //since index is only incrementing, no need to check if its smaller than 0
+            
+            
+        //place the first element from pre order traversal at the first position
+        //then find the same element's position in inOrderTraversal array and pass 
+        //elements to the left of it down the left recursive call and same with the right
+            
+        Node *temp = new Node(pre[index]);
+        
+        int pos = mp[pre[index]];
+        index++;
+        temp->left = traverse(in, pre, n, index, inStart, pos-1, mp);
+        temp->right = traverse(in, pre, n, index, pos+1, inEnd, mp);
+        
+        return temp;
+    }
+    
+    public:
+    Node* buildTree(int in[], int pre[], int n)
+    {
+        // Code here
+        unordered_map<int, int> mp;
+        //mapping the elements to their indexes
+        for(int i=0; i<n; i++)
+            mp[in[i]]=i;
+        
+        int startIndex = 0;
+        //start index must be passed by reference to avoid reusing the element while building 
+        //left and right subtree
+        return traverse(in, pre, n, startIndex, 0, n-1, mp);
+    }
+};
+
+//{ Driver Code Starts.
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		int n;
+		cin>>n;
+		
+		int inorder[n], preorder[n];
+		for(int i=0; i<n; i++)
+			cin>> inorder[i];
+		for(int i=0; i<n; i++)
+			cin>> preorder[i];
+		Solution obj;
+		Node *root = obj.buildTree(inorder, preorder, n);
+		printPostOrder(root);
+		cout<< endl;
+	}
+}
+
+// } Driver Code Ends

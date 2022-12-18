@@ -1,0 +1,97 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {    
+//     vector<vector<int>> try1(TreeNode* root) {        
+//         if(!root)
+//             return {};
+        
+//         bool fromLeft = 0;      //flag that tells if traversal is to be done from left to right or otherwise
+        
+//         queue<TreeNode*> que;   //queue that would hold the treenodes for traversal
+//         vector<vector<int>> result;
+//                                 //array that will hold the final answer
+//         vector<int> ans;        //array that will hold one level
+//         que.push(root);         //adding root element to the queue
+//         que.push(NULL);         //null pointer would tell that the current level has ended
+        
+//         while(!que.empty()){    
+//             TreeNode* temp = que.front();       //storing the front element of que in temp to use it
+//             que.pop();                          //and popping that element
+            
+//             if(!temp){              //temp being null means that the current level has ended
+//                 if(!que.empty()){   //to avoid infinte loop
+//                     que.push(NULL);
+//                 }
+//                 fromLeft = !fromLeft;   //switch the flag so that next level is from opposite direction
+//                 result.push_back(ans);  //push the current level into the ans array and clear it;
+//                 ans.clear();
+//                 continue;
+//             }
+//             ans.push_back(temp->val);
+//             if(fromLeft){           //when traversing from left, the left element is queued first and vice versa
+//                 if(temp->left)
+//                     que.push(temp->left);
+//                 if(temp->right)
+//                     que.push(temp->right);
+//             } else {
+//                 if(temp->right)
+//                     que.push(temp->right);
+//                 if(temp->left)
+//                     que.push(temp->left);
+//             }     
+            
+//         }
+        
+//         return result;
+//     }
+    
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        if(!root)
+            return {};
+        
+        bool fromLeft = 1;      //flag that tells if traversal is to be done from left to right or otherwise
+        
+        queue<TreeNode*> que;   //queue that would hold the treenodes for traversal
+        vector<vector<int>> result;
+                                //array that will hold the final answer
+        que.push(root);         //adding root element to the queue
+        
+        //the queue would traverse in normal level order traversal fashion. the elements would just be stored in zig-zag manner
+        //in the answer array
+        
+        while(!que.empty()){    //this loop will only interate through the levels, not individual nodes
+            int n = que.size();
+            vector<int> ans(n);    //array that will hold the current level
+            
+            for(int i=0; i<n; i++){ //loop to iterate through the nodes
+                
+                int index = fromLeft ? i : n-i-1; //using the flag to store elements in zig zag fashion
+                
+                TreeNode* temp = que.front();   //storing the front element of que in temp to use it
+                que.pop();                      //and popping that element
+                
+                ans[index] = temp->val;         
+                
+                if(temp->left)
+                    que.push(temp->left);
+                
+                if(temp->right)
+                    que.push(temp->right);
+            }
+            result.push_back(ans);  //pushing each level into the result array
+            fromLeft = !fromLeft;   //switching the flag
+        }
+        
+        return result;        
+    }
+};

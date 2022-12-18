@@ -1,0 +1,36 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    int traverse(TreeNode* root, int &maxPath){
+        if(!root)   //if node doesn't exists return 0
+            return 0;   
+
+        int left = traverse(root->left, maxPath);   //find the longest path down left and right branches
+        int right = traverse(root->right, maxPath); 
+
+        int maxPathThruCurrNode = max(left + root->val + right, root->val); 
+        //the maximum value can either be root + left + right branches (path passing through the root) or just the root 
+        maxPathThruCurrNode = max(maxPathThruCurrNode, root->val + left);
+        maxPathThruCurrNode = max(maxPathThruCurrNode, root->val + right);
+        //or the longest path down left and right branches
+        maxPath = max(maxPath, maxPathThruCurrNode);
+        
+        return max((root->val + max(left, right)), root->val);
+        //return the sum of longer of left and right paths and the current node
+    }
+public:
+    int maxPathSum(TreeNode* root) {
+        int ans = INT_MIN;
+        traverse(root, ans);
+        return ans;
+    }
+};

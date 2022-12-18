@@ -1,0 +1,54 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) { 
+        //another approach
+        
+        if(root->val == p->val || root->val == q->val)
+            //if either p or q is found, return the node
+            return root;
+        
+        if(!root->left && !root->right)
+            return NULL;    //if program reaches a leaf node, return null
+        
+        TreeNode *left=NULL, *right=NULL;
+                
+        if(root->left){
+            left = lowestCommonAncestor(root->left, p, q);
+            //left branch is traversed
+        }
+        
+        if(root->right){
+            right = lowestCommonAncestor(root->right, p, q);
+            //right branch is traversed
+        }
+        
+        //if a node is found in the branches, say left, then the left pointer would hold that node.
+        //if it isnt found, the left pointer would be null
+        
+        if(left){
+            if(right)
+                return root;    
+                //if both left and right are not null, that means the current node is the LCA
+            return left;
+            //if right is null, then left branch is either holding the LCA or its holding the node p or q
+            //so return left
+        }
+        
+        if(right)
+            return right;
+        //same with right pointer
+        
+        return NULL;
+        //if p or q dont exist in this branch, return NULL;
+        
+    }
+};

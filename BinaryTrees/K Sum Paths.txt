@@ -1,0 +1,29 @@
+class Solution{
+    void traverse(Node* root, int k, vector<int> path, int &count){
+        if(!root)
+            return;
+            
+        path.push_back(root->data);
+        //adding current node to path
+        
+        int sum = 0;
+        for(int i=path.size()-1; i>=0; i--){
+            //traversing the path backwards from the current element
+            sum+=path[i];
+            if(sum==k)
+                count++;
+                //not exiting the loop here because negative elements exist in the tree
+        }
+        
+        traverse(root->left, k, path, count);
+        traverse(root->right, k, path, count);
+    }
+  public:
+    int sumK(Node *root,int k)
+    {
+        // code here 
+        int count=0;
+        traverse(root, k, {}, count);
+        return count;
+    }
+};

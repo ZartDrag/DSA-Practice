@@ -1,0 +1,222 @@
+//{ Driver Code Starts
+//Initial Template for C++
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node {
+    int data;
+    Node *left;
+    Node *right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+
+
+Node *buildTree(string str) {
+    // Corner Case
+    if (str.length() == 0 || str[0] == 'N')
+        return NULL;
+
+    // Creating vector of strings from input
+    // string after spliting by space
+    vector<string> ip;
+
+    istringstream iss(str);
+    for (string str; iss >> str;)
+        ip.push_back(str);
+
+    // Create the root of the tree
+    Node *root = new Node(stoi(ip[0]));
+
+    // Push the root to the queue
+    queue<Node *> queue;
+    queue.push(root);
+
+    // Starting from the second element
+    int i = 1;
+    while (!queue.empty() && i < ip.size()) {
+
+        // Get and remove the front of the queue
+        Node *currNode = queue.front();
+        queue.pop();
+
+        // Get the current Node's value from the string
+        string currVal = ip[i];
+
+        // If the left child is not null
+        if (currVal != "N") {
+
+            // Create the left child for the current Node
+            currNode->left = new Node(stoi(currVal));
+
+            // Push it to the queue
+            queue.push(currNode->left);
+        }
+
+        // For the right child
+        i++;
+        if (i >= ip.size())
+            break;
+        currVal = ip[i];
+
+        // If the right child is not null
+        if (currVal != "N") {
+
+            // Create the right child for the current Node
+            currNode->right = new Node(stoi(currVal));
+
+            // Push it to the queue
+            queue.push(currNode->right);
+        }
+        i++;
+    }
+
+    return root;
+}
+
+
+// } Driver Code Ends
+//User function Template for C++
+
+class Solution {
+    
+    Node* mapChildToParentAndFindTarget(unordered_map<Node*, Node*> &ctp, Node* root, int target){
+        queue<Node*> lvlOrder;
+        //using level order traversal
+        lvlOrder.push(root);
+        ctp[root] = NULL;
+        //the parent of the root node is NULL
+        
+        Node *targetNode=NULL;
+        
+        while(!lvlOrder.empty()){
+            Node *temp = lvlOrder.front();
+            lvlOrder.pop();
+            if(temp->data==target)
+                targetNode=temp;
+                //if target node is found, store its address... it'll be returned by the function;
+                
+            if(temp->left){
+                ctp[temp->left] = temp;
+                //the left child is mapped to its parent
+                lvlOrder.push(temp->left);
+            }
+                
+            if(temp->right){
+                ctp[temp->right] = temp;
+                //right child mapped to the parent as well
+                lvlOrder.push(temp->right);
+            }
+        }
+        
+        return targetNode;
+        //returning address of the target node
+    }
+    
+  public:
+    int minTime(Node* root, int target) 
+    {
+        // Your code goes here
+        
+        unordered_map<Node*, Node*> ctp; 
+        //map each child to their parent
+        Node* targetNode = mapChildToParentAndFindTarget(ctp, root, target);
+        //the function also return the address of the target node
+        
+        unordered_map<int, bool> visited;
+        //this map would keep track of the visited nodes
+        
+        queue<Node*> currentlyBurning;
+        //queue to keep track of currently burning nodes... works similar to level order traversal
+        
+        currentlyBurning.push(targetNode);
+        //queue would start from the target node
+        visited[target] = true;
+        
+        int burnTime=0;
+        //the burning time starts from zero
+        
+        while(!currentlyBurning.empty()){
+            
+            int size = currentlyBurning.size();
+            bool dataAdded=false;
+            //would tell if any nodes surrounding this node are lit up
+            
+            //the loop would resolve the surrounding nodes... 
+            //loop is used so that timer is not incremented since the nodes are burning parellely
+            for(int i=0; i<size; i++){
+                Node* node = currentlyBurning.front();
+                currentlyBurning.pop();
+                //pop the frontmost element
+                
+                visited[node->data] = true;
+                //marking that the current node has been visited
+                
+                if(node->left){
+                    if(!visited.count(node->left->data)){
+                        //if left node exists and has not been visited, push it into the queue
+                        currentlyBurning.push(node->left);
+                        dataAdded=true;
+                    }
+                }
+                
+                if(node->right){
+                    if(!visited.count(node->right->data)){
+                        //similarly for the right node
+                        currentlyBurning.push(node->right);
+                        dataAdded=true;
+                    }
+                }
+                
+                Node* parent = ctp[node];
+                if(parent){
+                    if(!visited.count(parent->data)){
+                        //and the parent node
+                        currentlyBurning.push(parent);
+                        dataAdded=true;
+                    }
+                }
+            }
+            
+            //if data was added in this instance, increment the burn timer
+            if(dataAdded)
+                burnTime++;
+        }
+        
+        return burnTime;
+        
+    }
+};
+
+//{ Driver Code Starts.
+
+int main() 
+{
+    int tc;
+    scanf("%d ", &tc);
+    while (tc--) 
+    {    
+        string treeString;
+        getline(cin, treeString);
+        // cout<<treeString<<"\n";
+        int target;
+        cin>>target;
+        // cout<<target<<"\n";
+
+        Node *root = buildTree(treeString);
+        Solution obj;
+        cout<<obj.minTime(root, target)<<"\n"; 
+
+        cin.ignore();
+
+    }
+
+
+    return 0;
+}
+
+// } Driver Code Ends

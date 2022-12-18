@@ -1,0 +1,14 @@
+class Solution {
+public:
+    string makeGood(string s) {
+        
+        for(int i=1; i<s.size(); i++){
+            if(abs(s[i-1]-s[i])==32){   //checking if they are same letter but in different case thru ASCII
+                s.erase(i-1, 2);
+                i=(i>1)?i-2:0;
+            }
+        }
+        
+        return s;
+    }
+};

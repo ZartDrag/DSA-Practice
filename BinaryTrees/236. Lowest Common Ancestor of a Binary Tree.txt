@@ -1,0 +1,72 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    bool findPath(TreeNode* root, TreeNode* dat, vector<TreeNode*> &path){
+    //the value returned by the function would act as a flag which would tell if the node exists in this brach
+        int flag = false;
+        
+        if(root->val==dat->val){
+            //if the node to be found is reached, return true and push the node to the vector
+            path.push_back(dat);
+            return true;
+        }
+        
+        if(root->left){
+            flag = flag || findPath(root->left, dat, path);
+            //traverse the left branch
+        }
+        
+        if(flag){
+            //if node is found in the left branch, no need to traverse right
+            path.push_back(root);
+            //push and return
+            return true;
+        }   
+        //same with right branch
+        if(root->right){
+            flag = flag || findPath(root->right, dat, path);
+        }
+        
+        if(flag){
+            path.push_back(root);
+            return true;
+        } 
+        
+        return false;
+        //program would only reach here if it reaches a leaf node that isnt the node to be found
+        
+    }
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        vector<TreeNode*> pPath, qPath;
+        //ppath would store path till p and qpath would have path till q
+        findPath(root, p, pPath);
+        findPath(root, q, qPath);
+        
+        //  //finding the first common element in both paths throught nested loops )(N^2) comlexity; 
+        //  //it would be the 'LCA'        
+        // for(TreeNode* x : pPath)  
+        //     for(TreeNode* y : qPath)
+        //         if(x->val==y->val)
+        //             return x;
+        
+        //finding the first common element through hash maps O(N) complexity 
+        unordered_map<int, bool> umap;
+        
+        for(TreeNode* x : pPath)
+            umap[x->val]=1;
+        
+        for(TreeNode* y : qPath)
+            if(umap.count(y->val))
+                return y;
+        
+        return NULL;
+    }
+};
