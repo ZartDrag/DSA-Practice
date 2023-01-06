@@ -1,0 +1,80 @@
+#include <bits/stdc++.h> 
+/*************************************************************
+    
+    Following is the Binary Tree node structure:
+
+    class TreeNode{
+
+        public :
+            int data;
+            TreeNode *left;
+            TreeNode *right;
+
+            TreeNode(int data) {
+                this -> data = data;
+                left = NULL;
+                right = NULL;
+            }
+
+            ~TreeNode() {
+            if (left){
+            delete left;
+            }
+
+            if (right){
+            delete right;
+            }
+        }   
+    };
+
+*************************************************************/
+void inOrderTraversal(TreeNode<int> *root, vector<int> &inO){
+    if(!root)
+        return;
+    
+    inOrderTraversal(root->left, inO);
+    inO.push_back(root->data);
+    inOrderTraversal(root->right, inO);
+}
+
+vector<int> mergeVectors(vector<int> &v1, vector<int> &v2){
+    vector<int> v;
+    int m=v1.size(), n=v2.size();
+    int i=0, j=0;
+    while(i<m && j<n){
+        if(v1[i]<v2[j]){
+            v.push_back(v1[i++]);
+        } else {
+            v.push_back(v2[j++]);
+        }
+    }
+    
+    while(i<m)
+        v.push_back(v1[i++]);
+    
+    while(j<n)
+        v.push_back(v2[j++]);
+    
+    return v;
+}
+
+TreeNode<int> *createBalancedTree(vector<int> &inO, int l, int h){
+    if(l>h)
+        return NULL;
+    
+    int mid = l + (h-l)/2;
+    TreeNode<int> *root = new TreeNode<int>(inO[mid]);    //make the middle element the node
+    root->left=createBalancedTree(inO, l, mid-1);    //pass the left range for left branch 
+    root->right=createBalancedTree(inO, mid+1, h);    //right range for right branch
+    return root;
+}
+
+TreeNode<int> *mergeBST(TreeNode<int> *root1, TreeNode<int> *root2){
+    // Write your code here.
+    vector<int> inO1, inO2;
+    inOrderTraversal(root1, inO1);
+    inOrderTraversal(root2, inO2); //find the inOrderTraversal of both trees
+    vector<int> inO = mergeVectors(inO1, inO2);    //and merge them into one vector
+    return createBalancedTree(inO, 0, inO.size()-1);    
+    //then make a tree out of the merged in order traversal
+}

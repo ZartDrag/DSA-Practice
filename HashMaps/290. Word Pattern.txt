@@ -1,0 +1,30 @@
+class Solution {
+public:
+    bool wordPattern(string pattern, string s) {
+        unordered_map<char, string> mp;     //would map the words to characters
+        unordered_map<string, char> rmp;    //would map characters to words
+        stringstream ss(s);     //would divide the string into words
+        string word;            //would store the divided words
+        for(char ch : pattern){
+            if(!(ss >> word))   //if the pattern string is longer than available words
+                return false;   
+            
+            if(mp.count(ch)){           //if the character is already mapped to a word
+                if(mp[ch]!=word)        //and the mapped word is different
+                    return false;
+            } else if(rmp.count(word)){ //if the word is already mapped to a character
+                if(rmp[word]!=ch)
+                    return false;
+            }
+            else{   //if the character and word are not mapped yet, map them to each other
+                mp[ch] = word;
+                rmp[word] = ch;
+            }
+        }
+        
+        if(ss>>word)    //if there are more words than characters
+            return false;
+        
+        return true;
+    }
+};

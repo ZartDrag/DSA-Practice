@@ -1,0 +1,41 @@
+class Solution {
+    // bool solve(vector<int> &nums, int ind, vector<int> &dp){
+    //     if(ind>=nums.size()-1)
+    //         return true;
+        
+    //     if(dp[ind]!=-1)
+    //         return dp[ind];
+        
+    //     for(int i = 1; i<=nums[ind]; i++){
+    //         if(solve(nums, ind+i, dp))
+    //             return dp[ind] = true;
+    //     }
+        
+    //     return dp[ind] = false;
+    // }
+
+    bool tabulation(vector<int> nums){
+        int n = nums.size();
+        vector<bool> dp(n, false);
+        dp[n-1] = true;
+
+        for(int ind = n-2; ind >= 0; ind--){
+
+            for(int i = 1; i<=nums[ind] && i+ind<n; i++){
+                if(dp[ind+i]){
+                    dp[ind] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[0];        
+    }
+public:
+    bool canJump(vector<int>& nums) {
+        // vector<int> dp(nums.size(), -1);
+        // return solve(nums, 0, dp);
+
+        return tabulation(nums);
+    }
+};

@@ -1,0 +1,59 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    class info{
+        public:
+        bool isBST;
+        int maxEl, minEl, sum;
+        info(){
+            isBST = false;      //tells if the subtree is a BST
+            maxEl = INT_MIN;    //the max element in the subtree
+            minEl = INT_MAX;    //the min element in the subtree
+            sum = 0;            //the sum of the elements in the subtree
+        }
+    };
+public:
+    info findSum(TreeNode *root, int &ans){
+        if(!root){
+            info curr;
+            curr.isBST = true;
+            curr.maxEl = INT_MIN;
+            curr.minEl = INT_MAX;
+            curr.sum = 0;
+            return curr;
+        }
+
+        info left = findSum(root->left, ans);
+        info right = findSum(root->right, ans);
+
+        info curr;
+
+        if(left.isBST && right.isBST && left.maxEl < root->val && root->val < right.minEl){
+            //if the current subtree is a BST
+            curr.isBST = true;
+            curr.sum = left.sum + right.sum + root->val;
+            curr.minEl = min(left.minEl, root->val);
+            curr.maxEl = max(right.maxEl, root->val);   
+        } else {
+            curr.isBST = false;
+            curr.sum = max(left.sum, right.sum);
+        }
+        ans = max(ans, curr.sum);
+        return curr;
+    }
+
+    int maxSumBST(TreeNode* root) {
+        int ans = 0;
+        findSum(root, ans);
+        return ans;
+    }
+};

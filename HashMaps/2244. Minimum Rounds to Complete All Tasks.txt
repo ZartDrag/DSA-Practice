@@ -1,0 +1,25 @@
+class Solution {
+public
+    int minimumRounds(vectorint& tasks) {
+        unordered_mapint, int mp;
+
+        for(int i  tasks){
+            if(mp.count(i))
+                mp[i]++;
+            else
+                mp[i]=1;
+        }
+        int count=0;
+        for(pairint, int p  mp){
+            if(p.second==1)
+                return -1;
+            
+            if(p.second%3 == 0)
+                count += p.second3; 
+            else
+                count += p.second3+1;
+        }
+
+        return count;
+    }
+};
