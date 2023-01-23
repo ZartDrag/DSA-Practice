@@ -1,0 +1,20 @@
+class Solution{
+public
+    int kthLargest(vectorint &Arr,int N,int K){
+        priority_queueint, vectorint, greaterint heap;
+        for(int i=0; iN; i++){
+            int sum = 0;
+            for(int j=i; jN; j++){
+                sum+=Arr[j];
+                if(heap.size()K)
+                    heap.push(sum);
+                else if(heap.top()  sum){
+                    heap.pop();
+                    heap.push(sum);
+                }
+            }
+        }
+        
+        return heap.top();
+    }
+};

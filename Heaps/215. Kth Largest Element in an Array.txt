@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        priority_queue<int, vector<int>, greater<int>> que(nums.begin(), nums.begin()+k);
+        //copy the first k elements into the queue
+        int n = nums.size();
+        for(int i=k; i<n; i++){
+            //run a loop to traverse through the rest of the elements
+            if(nums[i] > que.top()){
+                //if an element element larger than the top most element of the queue is encountered,
+                //then pop the queue and push the element into the queue
+                que.pop();
+                que.push(nums[i]);
+                //this way only the k largest elements are preserved in the queue
+            }
+        }
+        //the topmost of these k element is the Kth largest element
+        return que.top();
+    }
+};

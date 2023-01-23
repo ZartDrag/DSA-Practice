@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        
+        int currFuel = 0, fuelCost = 0;
+        int startInd = 0, totalFuel = 0;
+        int n = gas.size();
+        for(int i = 0; i<n; i++){            
+            fuelCost+=cost[i];  //would keep track of the total fuel required to go around
+            totalFuel+=gas[i];  //would keep record of how much fuel is available
+            
+            currFuel+=gas[i]-cost[i];   
+            //the current fuel in the vehicle would be the fuel in the tank 
+            //plus the fuel available in the gas station minus the cost of getting there
+            if(currFuel<0){ 
+            //if the currFuel is -ve then its not possible to make a 
+            //full circuit starting from any of the fuel stations visited so far...
+                currFuel = 0;
+                startInd = i + 1;
+                //so updating starting index to i+1
+            }
+        }
+        return totalFuel<fuelCost?-1:startInd;
+        //if total fuel is less than fuel cost then its impossible to complete a circle
+        //otherwise return strting index
+    }
+};

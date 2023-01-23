@@ -1,0 +1,69 @@
+class MedianFinder {
+    priority_queue<double, vector<double>, greater<double>> minHeap; //would store elements larger than median
+    priority_queue<double> maxHeap;                            //would store elements smaller than median
+    double median = 0;
+
+    int signum(int a, int b){
+        if(a<b)
+            return -1;
+        if(a>b)
+            return 1;
+        return 0;
+    }
+
+public:
+    MedianFinder() {
+        
+    }
+    
+    
+
+    void addNum(int num) {
+        switch(signum(minHeap.size(), maxHeap.size())){
+            case 0:     //when both the heaps are of equal size
+                if(num < median){   //if num is smaller than median, push it into maxHeap
+                    maxHeap.push(num);
+                    median = maxHeap.top();
+                } else {            //otherwise minHeap
+                    minHeap.push(num);
+                    median = minHeap.top();
+                }
+            break;
+
+            case 1:     //when minHeap is larger
+                if(num < median)    //if num is smaller than median, push it into maxheap
+                    maxHeap.push(num);                    
+                else {              //but if num is larger, and element must be moved 
+                    maxHeap.push(minHeap.top());    //from minheap into the maxheap
+                    minHeap.pop();
+                    minHeap.push(num);              //to make room for num
+                }
+
+                median = (maxHeap.top() + minHeap.top())/2;
+                    //since there are even no. of elements now, median would be the average
+            break;
+
+            case -1:    //when maxHeap is larger, do the opposite of whats being done above
+                if(num < median){
+                    minHeap.push(maxHeap.top());
+                    maxHeap.pop();
+                    maxHeap.push(num);
+                } else 
+                    minHeap.push(num);
+
+                median = (maxHeap.top() + minHeap.top())/2;
+            break;
+        }
+    }
+    
+    double findMedian() {
+        return median;
+    }
+};
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder* obj = new MedianFinder();
+ * obj->addNum(num);
+ * double param_2 = obj->findMedian();
+ */

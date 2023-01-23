@@ -1,0 +1,63 @@
+class Solution {
+    struct Node{
+        public:
+        int val, i, j;
+        
+        Node(int v, int i, int j){
+            val = v;        //value
+            this->i = i;    //row
+            this->j = j;    //col
+        }
+    };
+    
+    class compare{
+        public:
+        bool operator()(Node *n1, Node *n2){
+            return n1->val>n2->val;
+        }
+    };
+public:
+    vector<int> smallestRange(vector<vector<int>>& nums) {
+        priority_queue<Node*, vector<Node*>, compare> heap;
+        int k = nums.size();
+        int maxEl = INT_MIN;         //would hold the maximum element
+        int minEl;
+        for(int i=0; i<k; i++){ 
+            Node *temp = new Node(nums[i][0], i, 0);    
+                //storing the first element of all lists in the heap
+            heap.push(temp);
+            maxEl = max(maxEl, temp->val);
+                //finding the maximum element
+        }
+
+        vector<int> Mrange(2);        
+        int minRange = INT_MAX;
+
+        while(true){
+            Node* temp = heap.top();    
+            heap.pop();
+
+            minEl = temp->val;              //the topmost element in the heap would be the smallest
+            
+            int range = maxEl - minEl;
+
+            if(range < minRange){           //if new range is smaller, update the range
+                minRange = range;
+                Mrange[0] = minEl;
+                Mrange[1] = maxEl;
+            }
+
+            int n = nums[temp->i].size();   
+            if(temp->j+1 == n)                                   
+                break;              //if any one of the lists reaches the end, break out of the loop
+
+            maxEl = max(maxEl, nums[temp->i][temp->j+1]);
+                                    //update the maximum element
+
+            heap.push(new Node(nums[temp->i][temp->j+1], temp->i, temp->j+1));
+                                    //push the next item into the heap
+        }
+        
+        return Mrange;
+    }
+};

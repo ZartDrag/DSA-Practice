@@ -1,0 +1,48 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+    class compare{ 
+public: 
+    int operator() (ListNode *l1, ListNode *l2){ 
+        return l1->val > l2->val; 
+    } 
+}; 
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if(lists.size()==0)
+            return NULL;
+
+        priority_queue<ListNode*, vector<ListNode*>, compare> heap; //create a min heap
+
+        for(ListNode *node : lists)
+            if(node)
+                heap.push(node);    //push the nodes in the vector into the heap
+
+        if(heap.empty())
+            return NULL;    //if the nodes were all null
+
+        ListNode *root = heap.top();
+        heap.pop();
+        if(root->next)
+            heap.push(root->next);
+        ListNode *trav = root;
+
+        while(!heap.empty()){
+            trav->next = heap.top();    //the top would always contain the smallest element
+            heap.pop();                 //link it to the root and pop it from the heap
+            trav = trav->next;
+            if(trav->next)              //push the element next to the pushed element into the heap
+                heap.push(trav->next);
+        }
+
+        return root;
+    }
+};

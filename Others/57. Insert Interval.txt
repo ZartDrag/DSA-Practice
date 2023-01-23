@@ -1,0 +1,45 @@
+class Solution {
+public:
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        int n = intervals.size();
+        int index=n;
+        //if no greater element is found that means the new interval needs to be placed at the end
+        for(int i=0; i<n; i++){
+            if(intervals[i][0] < newInterval[0] && intervals[i][1] > newInterval[1])
+                return intervals;
+            //if the new interval lies inside an existing interval no need to change the vector
+
+            if(intervals[i][0] > newInterval[0]){
+                index = i;
+                break;
+            }
+        } 
+        
+        intervals.insert(intervals.begin()+index, newInterval); //inserting the new interval
+
+        for(int i=0; i<intervals.size(); i++){
+            if(i-1>0 && intervals[i][0] <= intervals[i-1][1]){            
+                if(intervals[i-1][0] > intervals[i][0]) 
+            //if the current interval envolopes the entire prev interval then delete the prev interval
+                    intervals.erase(intervals.begin()+i-1);
+                else{
+            //otherwise merge the two indexes
+                    intervals[i-1][1] = intervals[i][1];
+                    intervals.erase(intervals.begin()+i);
+                }
+                i--;
+            }
+            if(i+1<intervals.size() && intervals[i][1] >= intervals[i+1][0]){
+                if(intervals[i][1] > intervals[i+1][1])
+                    intervals.erase(intervals.begin()+i+1);
+                else{
+                    intervals[i+1][0] = intervals[i][0];
+                    intervals.erase(intervals.begin()+i);
+                }
+                i--;
+            }
+        }
+
+        return intervals;
+    }
+};
