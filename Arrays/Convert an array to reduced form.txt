@@ -1,0 +1,62 @@
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+// } Driver Code Ends
+//User function template for C++
+
+struct item{
+    int val;
+    int oldPos;
+};
+
+class Solution{
+    static bool compare(item &i1, item &i2){
+        return i1.val < i2.val;
+    }
+public:	
+	// Converts arr[0..n-1] to reduced form.
+	void convert(int arr[], int n) {
+	    // code here
+	    //we just need to return the position of each element if the vector was sorted
+	    
+	    vector<item> sArr(n);
+	    for(int i=0; i<n; i++){
+	        sArr[i].val = arr[i];
+	        sArr[i].oldPos = i;
+	    }
+	    
+	    sort(sArr.begin(), sArr.end(), compare);
+	    
+	    for(int i=0; i<n; i++){
+	        arr[sArr[i].oldPos]=i;
+	    }
+	}
+
+};
+
+//{ Driver Code Starts.
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+        int arr[n];
+        for (int i = 0; i < n; i++) {
+            cin >> arr[i];
+        }
+        Solution ob;
+        ob.convert(arr, n);
+        for (int i = 0; i < n; i++) {
+            cout << arr[i] << " ";
+        }
+        cout << "\n";
+    }
+    return 0;
+}
+
+// } Driver Code Ends

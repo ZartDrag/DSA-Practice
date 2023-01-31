@@ -1,0 +1,38 @@
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode *ans = new ListNode(-1);   //dummy node
+        ListNode *ansTail = ans;
+        int carry = 0;
+
+        while(l1 && l2){
+            int sum = l1->val + l2->val + carry;
+            ansTail->next = new ListNode(sum%10);
+            ansTail = ansTail->next;
+            carry = sum/10;
+            l1 = l1->next;
+            l2 = l2->next;
+        }
+
+        while(l1){
+            int sum = l1->val + carry;
+            ansTail->next = new ListNode(sum%10);
+            ansTail = ansTail->next;
+            carry = sum/10;
+            l1 = l1->next;
+        }
+
+        while(l2){
+            int sum = l2->val + carry;
+            ansTail->next = new ListNode(sum%10);
+            ansTail = ansTail->next;
+            carry = sum/10;
+            l2 = l2->next;
+        }
+
+        while(carry){
+            ansTail->next = new ListNode(carry%10);
+            carry/=10;
+            ansTail = ansTail->next;
+        }
+
+        return ans->next;
+    }

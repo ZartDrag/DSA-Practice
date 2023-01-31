@@ -1,0 +1,42 @@
+Node* segregate(Node *head) {
+        
+        // Add code here
+        int zero = 0, one = 0, two = 0;
+        
+        Node *trav = head;
+        
+        while(trav){
+            switch(trav->data){
+                case 0:
+                    zero++;
+                break;
+                
+                case 1:
+                    one++;
+                break;
+                
+                case 2:
+                    two++;
+                break;
+            }
+            trav = trav->next;
+        }
+        trav = head;
+        
+        while(zero--){
+            trav->data = 0;
+            trav = trav->next;
+        }
+        
+        while(one--){
+            trav->data = 1;
+            trav = trav->next;
+        }
+        
+        while(two--){
+            trav->data = 2;
+            trav = trav->next;
+        }
+        
+        return head;
+    }

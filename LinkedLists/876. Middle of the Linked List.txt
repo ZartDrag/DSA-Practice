@@ -1,0 +1,30 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+        if(!head || !head->next)
+            return head;
+
+        ListNode *slow = head, *fast = head;
+        //when the fast pointer reaches the end, the slow pointer would've reached the middle
+
+        while(fast->next && fast->next->next){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        if(fast->next)  //when there are even no. of nodes, the fast pointer would only reach the second last node
+            slow=slow->next;    //in that case, the question requires the n/2+1th node
+
+        return slow;
+    }
+};

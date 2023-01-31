@@ -1,0 +1,75 @@
+/********************************
+    class Node
+    {
+    public:
+        int data;
+        Node *next;
+        Node(int data)
+        {
+            this->data = data;
+            this->next = NULL;
+        }
+    };
+
+********************************/
+
+Node* sortList(Node *head)
+{
+    // Write your code here.
+    Node *oneh = NULL, *twoh = NULL, *zeroh = NULL, *trav = head,
+         *onet = NULL, *twot = NULL, *zerot = NULL;
+
+    while(trav){
+        switch(trav->data){
+            case 0:
+                if(zeroh){
+                    zerot->next = trav;
+                    zerot = zerot->next;
+                } else {
+                    zeroh = trav;
+                    zerot = trav;
+                }
+            break;
+
+            case 1:
+                if(oneh){
+                    onet->next = trav;
+                    onet = onet->next;
+                } else {
+                    oneh = trav;
+                    onet = trav;
+                }
+            break;
+
+            case 2:
+                if(twoh){
+                    twot->next = trav;
+                    twot = twot->next;
+                } else {
+                    twoh = trav;
+                    twot = trav;
+                }
+            break;
+        }
+        trav = trav->next;       
+    } 
+
+    if(zeroh){
+        head = zeroh;    
+        if(oneh){
+            zerot->next = oneh;
+            onet->next = twoh;            
+        } else {
+            zerot->next = twoh;
+        }
+    } else if(oneh){
+        head = oneh;
+        onet->next = twoh;        
+    } else if (twoh) {
+        head = twoh;        
+    }
+
+    if(twoh)
+        twot->next = NULL;
+    return head;
+}
