@@ -1,0 +1,49 @@
+struct Node{
+    int val;
+    Node *next;
+    Node(int val){
+        this->val = val;
+        next = NULL;
+    }
+};
+
+class MinStack {
+    Node *head;
+    int minEl;
+public:
+    MinStack() {
+        head = NULL;
+        minEl = INT_MAX;
+    }
+    
+    void push(int val) {
+        Node *newEl = new Node(val);
+        newEl->next = head;
+        head = newEl;
+
+        minEl = min(minEl, val);
+    }
+    
+    void pop() {
+        Node *temp = head;
+        head = head->next;
+
+        if(temp->val == minEl){
+            minEl = INT_MAX;
+            Node *trav = head;
+            while(trav){
+                minEl = min(minEl, trav->val);
+                trav = trav->next;
+            }
+        }
+        delete temp;
+    }
+    
+    int top() {
+        return head->val;
+    }
+    
+    int getMin() {
+        return minEl;
+    }
+};

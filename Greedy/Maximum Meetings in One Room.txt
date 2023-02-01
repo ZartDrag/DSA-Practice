@@ -1,0 +1,81 @@
+//{ Driver Code Starts
+//Initial Template for C++
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// } Driver Code Ends
+//User function Template for C++
+
+class Solution{
+    
+    struct meeting{
+        int start, end, pos;  
+        meeting(int s, int e, int pos){
+            start = s;
+            end = e;
+            this->pos = pos;
+        }
+    };
+    
+    static bool sortByEndTime(meeting *a, meeting *b){
+        if(a->end == b->end)
+            return a->pos < b->pos;
+        
+        return a->end < b->end;
+    }
+    
+public:
+    vector<int> maxMeetings(int n,vector<int> &S,vector<int> &F){
+        vector<meeting*> meetings(n);
+        
+        for(int i=0; i<n; i++)
+            meetings[i] = new meeting(S[i], F[i], i+1);
+            
+        sort(meetings.begin(), meetings.end(), sortByEndTime);
+        
+        vector<int> ans;
+        ans.push_back(meetings[0]->pos);
+        int endTime = meetings[0]->end;
+        
+        for(int i=1; i<n; i++){
+            if(meetings[i]->start > endTime){
+                ans.push_back(meetings[i]->pos);
+                endTime = meetings[i]->end;
+            }
+        }
+        
+        sort(ans.begin(), ans.end());
+        return ans;
+    }
+};
+
+//{ Driver Code Starts.
+
+int main(){
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        vector<int> S(n),F(n);
+        for(int i=0;i<n;i++){
+            cin>>S[i];
+        }
+        for(int i=0;i<n;i++){
+            cin>>F[i];
+        }
+        Solution ob;
+        vector<int> ans=ob.maxMeetings(n,S,F);
+        for(int i=0;i<ans.size();i++){
+            cout<<ans[i];
+            if(i!=ans.size()-1){
+                cout<<" ";
+            }
+        }
+        cout<<endl;
+    }
+    return 0;
+}
+// } Driver Code Ends

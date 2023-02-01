@@ -1,0 +1,47 @@
+class Solution {
+public:
+    string reverseWords(string s) {
+        string ans = "";
+        int n = s.size();
+        for(int i = n-1; i>=-1; i--){
+            if(i==-1 || s[i] == ' '){
+                bool charAdded = false;
+                for(int j = i+1; j<n && s[j] != ' '; j++){
+                    charAdded = true;
+                    ans += s[j];
+                }
+                if(charAdded)   //only add the space if the above loop has run
+                    ans += " ";
+            }
+        }
+
+        return ans.substr(0, ans.size()-1); //to remove the extra space
+    }
+};
+
+
+
+
+//O(n):
+
+class Solution {
+public:
+    string reverseWords(string s) {
+        string ans = "", word = "";
+        int n = s.size();
+        bool nonSpaces = false; //a flag to tell if a non-space character has been encountered
+        for(int i=n-1; i>=-1; i--){
+            if((i==-1 || s[i]==' ') && word.size()){
+                reverse(word.begin(), word.end());
+                if(ans.size())
+                    ans += ' ';
+                ans += word;
+                word = "";
+            } else if(i != -1 && s[i] != ' '){
+                word += s[i];
+            }
+        }
+
+        return ans;
+    }
+};
