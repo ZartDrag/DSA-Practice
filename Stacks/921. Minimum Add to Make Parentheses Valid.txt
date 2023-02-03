@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int minAddToMakeValid(string s) {
+        
+    stack<char> stk;
+    //first remove the valid part of the expression
+    for(char ch : s){
+        if(ch == ')' && !stk.empty() && stk.top()=='(')
+            stk.pop();
+        else 
+            stk.push(ch);
+    }
+    
+    int openCount = 0, closeCount = 0;
+    
+    return stk.size();
+    }
+};

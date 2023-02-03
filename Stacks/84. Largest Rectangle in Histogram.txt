@@ -1,0 +1,48 @@
+class Solution {
+    void findNextSmallest(vector<int> &arr, vector<int> &next){
+        stack<int> stk;
+        stk.push(-1);
+        int n = arr.size();
+        for(int i=n-1; i>=0; i--){  //move from the right side of the array
+            while(stk.top()!=-1 && arr[i] <= arr[stk.top()])
+                    stk.pop();      
+                 
+            next[i] = stk.top();              
+            stk.push(i);           
+        }
+    }
+
+    void findPrevSmallest(vector<int> &arr, vector<int> &prev){
+        stack<int> stk;
+        stk.push(-1);
+        int n = arr.size();
+        for(int i=0; i<n; i++){  //move from the left side of the array
+            while(stk.top()!=-1 && arr[i] <= arr[stk.top()])
+                    stk.pop();                       
+            prev[i] = stk.top();     
+            stk.push(i);           
+        }
+    }
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        int n = heights.size();
+        vector<int> prev(n), next(n);
+        findNextSmallest(heights, next); 
+        //each index in next would hold the index of the first smaller element to the right
+        findPrevSmallest(heights, prev); 
+        //each index in prev would hold the index of the first smaller element to the left         
+
+        int maxArea = INT_MIN;
+
+        for(int i=0; i<n; i++){
+            int l = heights[i]; //find the area of the rectangle with length == height[i]
+            if(next[i] == -1)   //if there is no next then use the last index 
+                next[i] = n;
+            int b = next[i] - prev[i] - 1;   
+            //breadth can be calculated with this formula           
+            maxArea = max(maxArea, l*b);
+        }
+
+        return maxArea;
+    }
+};

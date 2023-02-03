@@ -1,0 +1,58 @@
+#include <bits/stdc++.h> 
+class NStack
+{
+    int *arr, *top, *next;
+    int nextFreeSpot;
+public:
+    // Initialize your data structure.
+    NStack(int N, int S)
+    {
+        // Write your code here.
+        arr = new int[S];   //the array holding the values
+        next = new int[S];  //the array indicating the element next to the curr element 
+                            //or the next free spot if the current spot is vacant
+        for(int i=0; i<S-1; i++)
+            next[i] = i+1;        
+        next[S-1] = -1;
+
+        top = new int[N];   //the array holding the locations of the 'top's
+
+        for(int i=0; i<N; i++)
+            top[i] = -1;
+
+        nextFreeSpot=0;
+    }
+
+    // Pushes 'X' into the Mth stack. Returns true if it gets pushed into the stack, and false otherwise.
+    bool push(int x, int m)
+    {
+        // Write your code here.
+        int ind = nextFreeSpot;
+
+        if(ind == -1)
+            return false;
+
+        nextFreeSpot = next[ind];
+        arr[ind] = x;
+
+        next[ind] = top[m-1];
+        top[m-1] = ind;
+        return true;
+    }
+
+    // Pops top element from Mth Stack. Returns -1 if the stack is empty, otherwise returns the popped element.
+    int pop(int m)
+    {
+        // Write your code here.
+        int ind = top[m-1];
+        if(ind == -1)
+            return -1;
+
+        top[m-1] = next[ind];
+        int x = arr[ind];
+        next[ind] = nextFreeSpot;
+        nextFreeSpot = ind;
+
+        return x;
+    }
+};

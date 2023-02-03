@@ -1,0 +1,51 @@
+//{ Driver Code Starts
+#include<bits/stdc++.h>
+using namespace std;
+
+int countRev (string s);
+int main()
+{
+    int t; cin >> t;
+    while (t--)
+    {
+        string s; cin >> s;
+        cout << countRev (s) << '\n';
+    }
+}
+
+// Contributed By: Pranay Bansal
+// } Driver Code Ends
+
+
+
+int countRev (string s)
+{
+    // your code here
+    if(s.size()%2)  //if the size is odd then its not possible
+        return -1;
+        
+    stack<char> stk;
+    //first remove the valid part of the expression
+    for(char ch : s){
+        if(ch == '}' && !stk.empty() && stk.top()=='{')
+            stk.pop();
+        else 
+            stk.push(ch);
+    }
+    
+    int openCount = 0, closeCount = 0;
+    //now count the number of open and closed brackets remaining
+    
+    while(!stk.empty()){
+        char ch = stk.top();
+        stk.pop();
+        if(ch == '{')
+            openCount++;
+        else
+            closeCount++;
+    }
+    
+    //the answer can be calculated using this formula:
+    
+    return (openCount+1)/2 + (closeCount+1)/2;
+}

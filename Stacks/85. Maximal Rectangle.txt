@@ -1,0 +1,73 @@
+class Solution {
+    void findPrev(vector<int> &row, vector<int> &ans){
+        int n = row.size();
+        stack<int> stk;
+        stk.push(-1);
+
+        for(int i=0; i<n; i++){
+            while(stk.top()!=-1 && row[i] <= row[stk.top()])
+                stk.pop();
+            
+            ans[i] = stk.top();
+            stk.push(i);
+        }
+    }
+
+    void findNext(vector<int> &row, vector<int> &ans){
+        int n = row.size();
+        stack<int> stk;
+        stk.push(-1);
+
+        for(int i=n-1; i>=0; i--){
+            while(stk.top()!=-1 && row[i] <= row[stk.top()])
+                stk.pop();
+            
+            ans[i] = stk.top();
+            stk.push(i);
+        }
+
+        for(int i : ans)
+                cout<<i<<" ";
+            cout<<endl;   
+    }
+public:
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        int rowCnt = matrix.size();
+        int colCnt = matrix[0].size();
+
+        vector<int> row(colCnt);    //find the largest rectangle in each row 
+                                    //then move on to the next row
+        for(int j=0; j<colCnt; j++)
+            row[j] = matrix[0][j] - '0';        
+
+        int maxArea = INT_MIN;
+
+        for(int i=0; i<rowCnt; i++){
+            if(i > 0)
+                for(int j=0; j<colCnt; j++){
+                    if(matrix[i][j] == '1')
+                        row[j]++;
+                    else
+                        row[j]=0;
+                } 
+
+            vector<int> prev(colCnt), next(colCnt);
+
+            findPrev(row, prev);
+            findNext(row, next);
+
+            for(int j=0; j<colCnt; j++){
+                int l = row[j];
+                
+                if(next[j] == -1)
+                    next[j] = colCnt;
+                
+                int b = next[j] - prev[j] - 1;
+
+                maxArea = max(maxArea, l*b);
+            }
+        }
+
+        return maxArea; 
+    }
+};
