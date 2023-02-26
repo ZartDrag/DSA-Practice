@@ -1,0 +1,28 @@
+class Solution {
+public:
+    long long distinctNames(vector<string>& ideas) {
+        unordered_set<string> suffixes[26]; 
+        //divide each string into initial + suffix and allot 1 set to each alphabet
+        //Eg: for string "quick", suffix "uick" would be in set 'q'  
+        for(string s : ideas)
+            suffixes[s[0]-'a'].insert(s.substr(1));
+        //theres no need to check the strings in the same group as 
+        //swapping their first letter wont change them 
+        long long ans = 0;
+        for(int i=0; i<26; i++){            
+            for(int j=i+1; j<26; j++){
+                int common = 0;
+                //finding the common suffixes between the two sets                            
+                for(auto suff : suffixes[i]){
+                    if(suffixes[j].count(suff))
+                        common++;
+                }
+                //removing common elements and multiplying
+                //multiplying by 2 since every pair forms 2 combinations (i,j) and (j,i)
+                ans += 2ll * (suffixes[i].size() - common) * (suffixes[j].size() - common);
+            }
+        }
+        
+        return ans;
+    }
+};

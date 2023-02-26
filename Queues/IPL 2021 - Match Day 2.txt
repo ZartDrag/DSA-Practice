@@ -1,0 +1,65 @@
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// } Driver Code Ends
+class Solution {
+  public:
+    vector<int> max_of_subarrays(vector<int> arr, int n, int k) {
+        // your code here
+        int i, j;
+        vector<int> ans;
+        deque<int> que;
+        que.push_back(0);
+        
+        for(j=1; j<k; j++){ //creating the window 
+            //if element is smaller than the last element of the queue, then push it in
+            //otherwise this would be the largest element in the range anyway 
+            //so remove all smaller elements before it
+            while(!que.empty() && arr[j] > arr[que.back()])
+                    que.pop_back();
+            que.push_back(j);
+        }
+        for(int i : ans)
+            printf("%d ", &i);
+        ans.push_back(arr[que.front()]);
+        
+        for(int i=0, j=k; j<n; i++, j++){   //sliding the window
+            if(i == que.front())
+                que.pop_front();
+            
+            while(!que.empty() && arr[j] > arr[que.back()])
+                    que.pop_back();
+            que.push_back(j);
+            
+            ans.push_back(arr[que.front()]);
+        }
+        
+        return ans;
+    }
+};
+
+//{ Driver Code Starts.
+
+int main() {
+
+    int t;
+    cin >> t;
+
+    while (t--) {
+
+        int n, k;
+        cin >> n >> k;
+
+        vector<int> arr(n);
+        for (int i = 0; i < n; i++) cin >> arr[i];
+        Solution ob;
+        vector<int> res = ob.max_of_subarrays(arr, n, k);
+        for (int i = 0; i < res.size(); i++) cout << res[i] << " ";
+        cout << endl;
+    }
+
+    return 0;
+}
+// } Driver Code Ends

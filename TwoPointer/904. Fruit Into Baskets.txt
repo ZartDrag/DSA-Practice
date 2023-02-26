@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int totalFruit(vector<int>& arr) {
+        int bask1 = arr[0];  //fruit in basket 1
+        int bask2 = bask1, n = arr.size();   //fruit in basket 2
+        int  f1 = 0, f2 = 0;    //frequency of both fruits
+        int count = 0, maxCount = INT_MIN;
+        for(int i=0, j=0; j<n; j++){
+            if(arr[j] == bask1 || arr[j] == bask2){
+                if(arr[j] == bask1)
+                    f1++;
+                else
+                    f2++;
+                count++;
+            } else if(bask1 == bask2){
+                bask2 = arr[j];
+                f2++;
+                count++;
+            } else {    //if its a new fruit, move i forward until one of the fruits becomes 0
+                maxCount = max(maxCount, count);
+                while(f1 && f2){
+                    if(arr[i++]==bask1)
+                        f1--;
+                    else
+                        f2--;
+                    count--;
+                }
+                if(!f1){    //assigning the new fruit to the basket that became 0
+                    bask1 = arr[j];
+                    f1 = 1;
+                } else {
+                    bask2 = arr[j];
+                    f2 = 1;
+                }
+                count++;    //incrementing count since a new fruit has been added 
+            }
+        }
+        maxCount = max(maxCount, count);
+        return maxCount;
+    }
+};

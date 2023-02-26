@@ -1,0 +1,81 @@
+struct Node{
+    int val;
+    Node *next;
+    Node(int v){
+        val = v;
+        next = NULL;
+    }
+};
+class MyCircularQueue {
+    int size, maxSize;
+    Node *front, *rear;
+public:
+    MyCircularQueue(int k) {
+        maxSize = k;
+        size = 0;
+        front = NULL;
+        rear = NULL;
+    }
+    
+    bool enQueue(int value) {
+        if(size == maxSize)
+            return false;
+        if(!front){
+            front = new Node(value);
+            rear = front;  
+            size = 1; 
+            return true;         
+        }
+
+        rear->next = new Node(value);
+        rear = rear->next;
+        size++;
+        return true;
+    }
+    
+    bool deQueue() {
+        if(size == 0)
+            return false;
+        
+        Node* temp = front;
+        front = front->next;
+        delete temp;
+        size--;
+        if(size==0)
+            rear = NULL;
+        return true;
+    }
+    
+    int Front() {
+        if(!front)
+            return -1;
+        return front->val;
+    }
+    
+    int Rear() {
+        if(!rear)
+            return -1;
+        return rear->val;
+    }
+    
+    bool isEmpty() {
+        if(size==0)
+            return true;
+        return false;
+    }
+    
+    bool isFull() {
+        return size == maxSize;
+    }
+};
+
+/**
+ * Your MyCircularQueue object will be instantiated and called as such:
+ * MyCircularQueue* obj = new MyCircularQueue(k);
+ * bool param_1 = obj->enQueue(value);
+ * bool param_2 = obj->deQueue();
+ * int param_3 = obj->Front();
+ * int param_4 = obj->Rear();
+ * bool param_5 = obj->isEmpty();
+ * bool param_6 = obj->isFull();
+ */

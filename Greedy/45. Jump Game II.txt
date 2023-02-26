@@ -1,0 +1,66 @@
+class Solution {
+    //memoization
+    // int jumps(vector<int> &nums, int ind, vector<int> &memoize){
+    //     if(ind >= nums.size()-1)
+    //         return 0;
+        
+    //     if(memoize[ind] != -1)
+    //         return memoize[ind];
+
+    //     int minJumps = INT_MAX;
+    //     for(int i=1; i<=nums[ind]; i++){
+    //         int jumpsLeft = jumps(nums, ind+i, memoize);
+    //         if(jumpsLeft != -3)     //if the answer is -3 then dont consider it
+    //             minJumps = min(minJumps, jumpsLeft);
+    //     }
+
+    //     return memoize[ind] = minJumps == INT_MAX? -3 : (1+minJumps);   
+    //     //if its not possible to reach the end through this part then return -3
+    // }
+
+    //tabulation
+    // int jumps(vector<int> &nums){
+    //     vector<int> tabulate(nums.size(), 0);
+    //     int n = nums.size();
+        
+
+    //     for(int ind=n-2; ind>=0; ind--){
+    //         int minJumps = INT_MAX;
+    //         for(int i=1; i<=nums[ind]; i++){
+    //             if(ind + i >= n)
+    //                 break;
+    //             int jumpsLeft = tabulate[ind+i];
+    //             if(jumpsLeft != -3)     //if the answer is -3 then dont consider it
+    //                 minJumps = min(minJumps, jumpsLeft);
+    //         }
+    //         tabulate[ind] = minJumps == INT_MAX? -3 : (1+minJumps); 
+    //     }
+    //     return tabulate[0];
+    // }
+
+    //Greedy
+
+    int jumps(vector<int> &nums){
+        int farthest = 0;  //the farthest you can get from the current jump
+        int jump = 0;      //number of jumps
+        int end = 0;       //the end of the current jump
+        int n = nums.size();
+        for(int i=0; i<n-1; i++){
+            farthest = max(farthest, i+nums[i]);               
+            if(i == end){   
+                jump++;
+                end = farthest;
+            }
+        }
+
+        return jump;
+    }
+public:
+    int jump(vector<int>& nums) {
+        // vector<int> memoize(nums.size()-1, -1);
+
+        // return jumps(nums, 0, memoize);
+
+        return jumps(nums);
+    }
+};

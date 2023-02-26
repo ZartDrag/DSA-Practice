@@ -1,0 +1,46 @@
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        int i, j;
+	    int k = p.size(), n = s.size();
+	    
+	    unordered_map<char, int> letters;
+	    
+	    for(char ch : p)
+	        letters[ch]++;      //letters would contain the count of each letter
+	       
+	    int distinctChar = letters.size(); 
+	                            //would hold the number of distinct letters
+	    
+	    for(j=0; j<k; j++){
+	        if(letters.count(s[j])){
+	            letters[s[j]]--;
+	            if(letters[s[j]] == 0)
+	                distinctChar--;
+	        }
+	    }
+	    
+	    vector<int> ans;
+	    if(distinctChar == 0)
+	        ans.push_back(0);
+	        
+	    for(int i=0, j=k; j<n; i++, j++){
+	        if(letters.count(s[i])){
+	            letters[s[i]]++;
+	            if(letters[s[i]] == 1)
+	                distinctChar++;
+	        }
+	        
+	        if(letters.count(s[j])){
+	            letters[s[j]]--;
+	            if(letters[s[j]] == 0)
+	                distinctChar--;
+	        }
+	        
+	        if(distinctChar == 0)
+	            ans.push_back(i+1);
+	    }
+	    
+	    return ans;
+    }
+};

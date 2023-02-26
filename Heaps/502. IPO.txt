@@ -1,0 +1,48 @@
+class Solution {   
+    struct Project{
+        int profit, capital;
+    }; 
+
+    static bool compare(Project P1, Project P2){
+        if(P1.capital == P2.capital){
+            return P1.profit < P2.profit;
+        }
+
+        return P1.capital < P2.capital;
+    }
+
+    class Compare {
+        public:
+        bool operator()(Project P1, Project P2){
+            return P1.profit < P2.profit;
+        }
+    };  
+
+public:
+    int findMaximizedCapital(int k, int w, vector<int>& profits, vector<int>& capital) {
+        int n = profits.size();
+        vector<Project> Projects(n);   //placing the profits and capitals into one structure
+        for(int i=0; i<n; i++){
+            Projects[i].profit = profits[i];
+            Projects[i].capital = capital[i];
+        }
+
+        sort(Projects.begin(), Projects.end(), compare);
+                                        //sort based on capital and profit
+        
+        priority_queue<Project, vector<Project>, Compare> heap;
+        //a heap based on profits of the projects
+        int i=0;
+        while(k--){
+            while(i<n && Projects[i].capital <= w){ //push the projects which could be started into the heap
+                heap.push(Projects[i++]);
+            }
+            if(heap.empty())
+                break;
+            w += heap.top().profit;     //add the profit of the available project with the max profit
+            heap.pop();
+        } 
+
+        return w;
+    }
+};
