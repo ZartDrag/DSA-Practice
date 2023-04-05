@@ -1,0 +1,54 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+void findSmol(vector<int> arr, int &ind, int &small, int *&smallInd){
+    if(ind < arr.size() && arr[ind] < small){
+        smallInd = &ind;
+        small = arr[ind];
+    }
+}
+
+int main()
+{
+    cout<<"enter number of arrays: ";
+    int x;
+    cin>>x;
+    vector<vector<int>> arrays;
+    int totEls;
+    
+    for(int i=0; i<x; i++){
+        int t;
+        cout<<"Enter size of array "<<i<<": ";
+        cin>>t;
+        totEls+=t;
+        vector<int> temp(t);
+        for(int j=0; j<t; j++)
+            cin>>temp[j];
+        arrays.push_back(temp);
+    }
+    
+    int mid = totEls/2+1;
+    vector<int> indices(x, 0);
+    int *smallInd = NULL;
+    int small = INT_MAX;
+    
+    while(mid){
+        small = INT_MAX;
+        
+        for(int i=0; i<x; i++)
+            findSmol(arrays[i], indices[i], small, smallInd);
+        
+        (*smallInd)++;
+        mid--;
+    }
+    cout<<small;
+}
