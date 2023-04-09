@@ -1,0 +1,31 @@
+class Solution {
+public:
+    string intToRoman(int num) {
+        pair<int, char> chars[] = {
+            {1, 'I'}, {5, 'V'}, {10, 'X'}, {50, 'L'}, {100, 'C'}, {500, 'D'}, {1000, 'M'}
+        };
+
+        string ans;
+
+        for(int i=6; i>=0 && num; i--){
+            if(num >= chars[i].first){
+                ans.push_back(chars[i].second);
+                num -= chars[i].first;
+                i++;
+            } else if(i%2 && num >= chars[i].first - chars[i-1].first){
+                ans.push_back(chars[i-1].second);
+                ans.push_back(chars[i].second);
+                num = num - chars[i].first + chars[i-1].first;
+                i++;
+            } else if(i > 1 && i%2 == 0 && num >= chars[i].first - chars[i-2].first){
+                ans.push_back(chars[i-2].second);
+                ans.push_back(chars[i].second);
+                num = num - chars[i].first + chars[i-2].first;
+                i++;
+            }           
+        }
+        
+
+        return ans;
+    }
+};

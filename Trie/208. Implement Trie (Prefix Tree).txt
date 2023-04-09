@@ -1,0 +1,73 @@
+class Trie {
+    struct Node{
+        private:
+        Node *links[26];
+        public:
+        bool flag;  //tells if a word just ended
+
+        Node(){
+            for(auto &a : links)
+                a = NULL;
+            flag = false;
+        }
+        bool checkChar(char ch){
+            //tells if the character exists in the trie node
+            return links[ch - 'a'];
+        }
+
+        void insertChar(char ch){
+            links[ch - 'a'] = new Node();
+        }
+
+        Node *nextChar(char ch){
+            return links[ch - 'a'];
+        }
+    } *root;
+public:
+    Trie() {
+        root = new Node();
+    }
+    
+    void insert(string word) {
+        Node *node = root;
+        for(char ch : word){
+            cout<<ch<<endl;
+            if(!node->checkChar(ch)){
+                node->insertChar(ch);
+            }
+            node = node->nextChar(ch);
+        }
+        //after loops ends, the word wouldve ended so mark flag as true
+        node->flag = true;
+    }
+    
+    bool search(string word) {
+        Node *node = root;
+        for(char ch : word){
+            if(!node->checkChar(ch)){
+                return false;
+            }
+            node = node->nextChar(ch);
+        }
+        return node->flag;
+    }
+    
+    bool startsWith(string prefix) {
+        Node *node = root;
+        for(char ch : prefix){
+            if(!node->checkChar(ch)){
+                return false;
+            }
+            node = node->nextChar(ch);
+        }
+        return true;
+    }
+};
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie* obj = new Trie();
+ * obj->insert(word);
+ * bool param_2 = obj->search(word);
+ * bool param_3 = obj->startsWith(prefix);
+ */

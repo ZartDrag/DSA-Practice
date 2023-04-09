@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<int> successfulPairs(vector<int>& spells, vector<int>& potions, long long success) {
+        sort(potions.begin(), potions.end());
+        vector<int> pairs;
+        int n = potions.size();
+
+        for(int spell : spells){
+            int l = 0, h = n-1;
+            int ind = n;    //would hold the index of the first potion index which would be successful
+                            //all the potions after it would be successful too
+            while(l <= h){  //find ind using binary search
+                int mid = l + (h-l)/2;
+                if(1LL * spell * potions[mid] >= success){
+                    ind = mid;
+                    h = mid - 1;
+                } else 
+                    l = mid + 1;
+            }   
+            pairs.push_back(potions.size() - ind);
+                            //all the indices after ind would be successful so calculate it and push it
+        }
+
+        return pairs;
+    }
+};

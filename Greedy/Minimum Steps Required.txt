@@ -1,0 +1,52 @@
+//{ Driver Code Starts
+// Initial Template for C++
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// } Driver Code Ends
+// User function Template for C++
+
+int findIslands(string str, char ch){   
+    //finds the number of groups of cons characters
+    int count = 0;
+    int n = str.size();
+    for(int i=0; i<n-1; i++){
+        if(str[i] == ch && str[i+1] != ch)
+            count++;
+    }
+    if(str[n-1]==ch)
+        count++;
+    return count;
+}
+
+int minSteps(string str) {
+    // Write your code here.
+    
+    int countA = findIslands(str, 'a');
+    int countB = findIslands(str, 'b');
+    //the answer would be smaller of the 2 plus one;
+    //after removing one type of charaters, all the characters of 
+    //the other type would come together. they could then all 
+    //be removed in one go 
+    
+    return min(countA, countB) + 1;
+}
+
+
+
+//{ Driver Code Starts.
+
+int main() {
+
+    int t;
+    cin >> t;
+    while (t--) {
+        string str;
+        cin >> str;
+        cout << minSteps(str) << endl;
+    }
+}
+
+// } Driver Code Ends

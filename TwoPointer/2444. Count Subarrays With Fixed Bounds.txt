@@ -1,0 +1,23 @@
+class Solution {
+public:
+    long long countSubarrays(vector<int>& nums, int minK, int maxK) {
+        long long count = 0;
+        int n = nums.size();
+        int lastInvalidIndex = -1;
+        int lastMinK = -1, lastMaxK = -1;   //would hold the latest positions of minK and maxK
+        
+        for(int i=0; i<n; i++){
+            if(minK <= nums[i] && nums[i] <= maxK){
+                if(nums[i] == minK)
+                    lastMinK = i;
+                if(nums[i] == maxK)
+                    lastMaxK = i;
+                count += max(0, min(lastMinK, lastMaxK) - lastInvalidIndex);
+            } else {
+                lastMinK = -1, lastMaxK = -1;   //reseting values
+                lastInvalidIndex = i;
+            }
+        }
+        return count;
+    }
+};

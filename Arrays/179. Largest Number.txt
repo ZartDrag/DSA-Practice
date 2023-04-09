@@ -1,0 +1,25 @@
+class Solution {
+    static bool compare(string s1, string s2){
+        string S1 = s1 + s2;
+        string S2 = s2 + s1;
+
+        return S1 > S2;
+    }
+    
+public:
+    string largestNumber(vector<int>& nums) {
+        vector<string> strNums;
+        for(int i : nums){
+            strNums.push_back(to_string(i));
+        }
+        sort(strNums.begin(), strNums.end(), compare);
+        string ans = "";
+        for(string s : strNums)
+            ans = ans + s;
+        
+        int i;
+        for( i=0; i<ans.size()-1 && ans[i]=='0'; i++);
+
+        return ans.substr(i);
+    }
+};

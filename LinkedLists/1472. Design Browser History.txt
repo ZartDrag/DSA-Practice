@@ -1,0 +1,53 @@
+class BrowserHistory {
+    struct Node{
+        string site;
+        Node *next;
+        Node *prev;
+
+        Node(string s){
+            site = s;
+            next = NULL;
+            prev = NULL;
+        }
+
+        ~Node(){
+            if(next)    //delete all the following nodes
+                next->~Node();
+        }
+    } *History;
+public:
+    BrowserHistory(string homepage) {
+        History = new Node(homepage);
+    }
+    
+    void visit(string url) {
+        if(History->next)
+            History->next->~Node();
+        History->next = new Node(url);
+        History->next->prev = History;
+        History = History->next;
+        // cout<<History->site<<" ";
+    }
+    
+    string back(int steps) {
+        for(int i=0; History->prev && i<steps; i++){
+            History = History->prev;
+        }
+        return History->site;
+    }
+    
+    string forward(int steps) {
+        for(int i=0; History->next && i<steps; i++){
+            History = History->next;
+        }
+        return History->site;
+    }
+};
+
+/**
+ * Your BrowserHistory object will be instantiated and called as such:
+ * BrowserHistory* obj = new BrowserHistory(homepage);
+ * obj->visit(url);
+ * string param_2 = obj->back(steps);
+ * string param_3 = obj->forward(steps);
+ */

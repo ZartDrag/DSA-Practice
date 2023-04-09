@@ -1,0 +1,45 @@
+class Solution {
+    unordered_map<string, bool> memo;
+    //map to memoize the function
+public:
+    bool isScramble(string s1, string s2) {
+        int n = s1.size();
+        if(n != s2.size())  
+            return false;
+            //strings cannot be equal if they are not of same size
+        
+        if(s1 == s2)
+            return true;
+        
+        if(n == 1)
+            return false;
+
+        string str = s1 + " " + s2;
+        //would be used to store in the memoization map
+
+        if(memo.count(str))
+            return false;
+        //the map would only hold the false values since the recursive calls 
+        //would stop once a true value is encountered  
+         
+
+        for(int i=1; i<n; i++){ //splitting the strings at every index
+            //without swapping
+            if(
+                isScramble(s1.substr(0, i), s2.substr(0, i)) //left part
+                &&
+                isScramble(s1.substr(i), s2.substr(i))       //right part
+            )     
+                return true;
+
+            //with swapping; left part of s1 with right part of s2
+            if(
+                isScramble(s1.substr(0, i), s2.substr(n-i))
+                &&
+                isScramble(s1.substr(i), s2.substr(0,n-i))
+            )
+                return true;
+        }        
+        return memo[str] = false;
+    }
+};

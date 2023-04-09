@@ -1,0 +1,20 @@
+long long int findMaxProduct(vector<int>&a, int n){
+        //Write your code here  
+        int larNeg = INT_MIN, maxEl = INT_MIN;
+        int countNeg = 0;
+        long long int prod = 1;
+        for(int i=0; i<n; i++){
+            if(a[i] < 0){
+                countNeg++;
+                larNeg = max(larNeg, a[i]);
+            }
+            if(a[i]!=0)
+                prod = (prod * a[i] % MOD);
+            maxEl = max(maxEl, a[i]);
+        }
+        
+        if(countNeg % 2)
+            prod /= larNeg;
+        
+        return prod==1?maxEl:prod;
+    }
