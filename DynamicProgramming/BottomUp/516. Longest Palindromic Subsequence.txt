@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int longestPalindromeSubseq(string s) {        
+        vector<vector<int>> tabu(s.size(), vector<int>(s.size()));
+        int n = s.size();
+        for(int i=n-1; i >= 0; i--){
+            tabu[i][i] = 1;
+            for(int j=i+1; j < n; j++){
+                if(s[i] == s[j])
+                    tabu[i][j] = 2 + tabu[i+1][j-1];
+                else
+                    tabu[i][j] = max(tabu[i+1][j], tabu[i][j-1]);
+            }
+        }
+
+        return tabu[0][n-1];
+    }
+};

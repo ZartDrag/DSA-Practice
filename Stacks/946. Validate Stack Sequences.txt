@@ -1,0 +1,19 @@
+class Solution {
+public
+    bool validateStackSequences(vectorint& pushed, vectorint& popped) {
+        stackint stk;     we'll simulate the stack using a stack of our own
+        
+        for(int i=0, j=0; ipushed.size(); i++){
+            stk.push(pushed[i]);    push a character into the stack from the pushed array
+
+            if the top of the stack is equal to the front element in the popped array, 
+            then keep popping it until it gets unequal
+            while(!stk.empty() && stk.top() == popped[j]){
+                stk.pop();
+                j++;
+            }
+        }
+        
+        return stk.empty(); finally, if the stack is empty it means the stack sequence is valid 
+    }
+};

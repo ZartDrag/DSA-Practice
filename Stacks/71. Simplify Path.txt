@@ -1,0 +1,43 @@
+class Solution {
+public:
+    string simplifyPath(string path) {
+        stack<string> stk;
+        path += '/';    
+        //adding an extra '/' to the path in case there is no / in the end. 
+        //Extra /s are ignored anyway so its presence makes no difference
+
+        string str = "";   
+        //str would hold the words before /s are encountered
+
+        int n = path.size();
+        for(int i = 1; i < n; i++){
+            if(path[i] != '/'){
+                str += path[i];     //if the character is not a / then add it to the string
+            } else if(path[i] == '/'){
+                if(str == ".."){    // .. means to go back a directory. Pop the stack in this case.
+                    if(!stk.empty())    
+                        stk.pop();
+                }
+                else if(str == "." || str == ""){   
+                    // . means the current directory. No need to do anything in this case. So continue
+                    // "" would only be encountered if there are multiple /s together.
+                    // No need to do anything in that case too
+                    str = "";
+                    continue;
+                }                   
+                else 
+                    stk.push(str);
+                    //if str is anything other than these, then its a directory. Push it into the stack
+                str = "";
+            }
+        }
+        
+        while(!stk.empty()){
+            str = '/' + stk.top() + str;    //pop the stack and add /s
+            stk.pop();
+        }
+        if(str == "")
+            str = '/';
+        return str;
+    }
+};
