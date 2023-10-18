@@ -1,0 +1,53 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <math.h>
+
+using namespace std;
+//find the prime numbers from one array and find their squares from the second array
+
+bool isPrime(int n){
+    for(int i=2; i<=n/2; i++)
+        if(n%i == 0)
+            return false;
+    return true;
+}
+
+int main()
+{
+    unordered_map<float, bool> primes;
+    
+    int arr1[] = {1, 2, 5, 7, 9, 3, 25, 12, 32, 53, 675, 74, 4, 32, 97};
+    int m = sizeof(arr1)/sizeof(int);
+    int arr2[] = {1, 9, 34, 16, 49, 4, 625, 113, 420, 69};
+    int n = sizeof(arr2)/sizeof(int);
+    
+    for(int i=0; i<m; i++)
+        if(!primes.count(arr1[i]) && isPrime(arr1[i]))
+            primes[arr1[i]] = true;
+            
+    cout<<"Prime numbers in arr1 : ";
+    
+    for(auto i : primes)
+        cout<<i.first<<" ";
+    cout<<endl;
+    
+    vector<int> ans;
+    for(int i=0; i<n; i++)
+        if(primes.count(sqrt(arr2[i])))
+            ans.push_back(sqrt(arr2[i]));
+    
+    cout<<"Their squares in arr2 : ";
+    for(auto i : ans)
+        cout<<i<<" ";
+    
+    return 0;
+}
