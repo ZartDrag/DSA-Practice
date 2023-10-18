@@ -1,0 +1,31 @@
+class Solution {
+    int findLongestSubseq(string &s, int i, int j, vector<vector<int>> &memo){
+        if(i == j)
+            return 1;       
+            //the character in the middle position of a string
+        
+        if(i > j)
+            return 0;
+            //when i and j cross each other
+
+        if(memo[i][j] != -1)
+            return memo[i][j];
+        //if this value of i and j has already been solved, then simply return it
+
+        if(s[i] == s[j])
+            return memo[i][j] = 2 + findLongestSubseq(s, i+1, j-1, memo);
+            //if the i & j characters are equal, increment the answer and call 
+            //the function again recursively after increasing i and decreasing j
+        
+        return memo[i][j] = max(findLongestSubseq(s, i+1, j, memo), findLongestSubseq(s, i, j-1, memo));
+        //if the string is not a pallindrome for the current value of i and j then recursive call the 
+        //function by first incrementing i and then after decrementing j and return the maximum of the two
+
+        //memoize the return value for this value of i and j
+    }
+public:
+    int longestPalindromeSubseq(string s) {
+        vector<vector<int>> memo(s.size(), vector<int>(s.size(), -1));
+        return findLongestSubseq(s, 0, s.size()-1, memo);
+    }
+};

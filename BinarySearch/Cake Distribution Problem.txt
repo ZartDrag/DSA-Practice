@@ -1,0 +1,33 @@
+class Solution{
+    bool isDivisionPossible(vector<int>& sweetness, int N, int K, int minSweet){
+        //the function checks if division is possible with each division being at least minSweet
+        int currSweet = 0;
+        for(int i=0; i<sweetness.size(); i++){
+            currSweet += sweetness[i];
+            if(currSweet >= minSweet){
+                K--;
+                if(K <= 0)
+                    return true;
+                currSweet = 0;
+            }
+        }
+        return false;
+    }
+    
+    public:
+    
+    int maxSweetness(vector<int>& sweetness, int N, int K) {
+    // Write your code here.
+        long long l = *min_element(sweetness.begin(), sweetness.end()), h = accumulate(sweetness.begin(), sweetness.end(), 0);
+        //binary search will run between the least value in the sweetness array and the total sum of the array
+        int ans = 0;
+        while(l <= h){
+            long long mid = l + (h - l)/2;
+            //checking if division is possible with minimum value as mid
+            if(isDivisionPossible(sweetness, N, K+1, mid)){
+                ans = mid;      //if it is, then mid is a potential answer, store it and check for a higher value of mid
+                l = mid+1;
+            } else {
+                h = mid-1;
+            }
+        }

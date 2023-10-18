@@ -1,0 +1,32 @@
+class Solution {
+    int findMaxVal(vectorvectorint &piles, int ind, int currCoins, vectorvectorint &memo){
+        if(ind == piles.size()  currCoins == 0)
+            return 0;
+        
+        if(memo[ind][currCoins] != -1)
+            return memo[ind][currCoins];
+
+        we'll try and take all coins from ith pile and find the maximum one
+        int n = min((int)piles[ind].size(), currCoins);
+        loop should run until the no. of coins is used up or until the pile becomes empty
+
+        int ans = findMaxVal(piles, ind+1, currCoins, memo);
+        when no coins from this pile are taken
+
+        int currVal = 0;
+        total value of the coins taken from this pile
+
+        for(int i=0; in; i++){
+            currVal += piles[ind][i];   adding the ith coins value to currVal
+            ans = max(ans, findMaxVal(piles, ind+1, currCoins-i-1, memo) + currVal);
+            recursively calling the function
+        }
+
+        return memo[ind][currCoins] = ans;
+    }
+public
+    int maxValueOfCoins(vectorvectorint& piles, int k) {
+        vectorvectorint memo(piles.size(), vectorint(k + 1, -1));
+        return findMaxVal(piles, 0, k, memo);
+    }
+};

@@ -1,0 +1,46 @@
+#define MOD 1000000007;
+class Solution {
+    int findWays(vector<vector<int>> &letterCnt, string &target, int ind, int tarInd, vector<vector<int>> &memo){  
+        if(tarInd == target.size())
+            return 1;      
+        if(ind == letterCnt.size())
+            return 0;
+        
+        if(memo[ind][tarInd] != -1)
+            return memo[ind][tarInd];
+        
+        int ans = findWays(letterCnt, target, ind+1, tarInd, memo) % MOD   //excluding the current letter
+
+        ans += (long long)findWays(letterCnt, target, ind + 1, tarInd + 1, memo) * letterCnt[ind][target[tarInd] - 'a'] % MOD;   
+        //including the current letter
+
+        return memo[ind][tarInd] = ans % MOD;
+    }
+public:
+    int numWays(vector<string>& words, string target) {
+        int m = words.size();
+        int n = words[0].size();
+        vector<vector<int>> memo(n, vector<int>(target.size(), -1));
+        vector<vector<int>> letterCount(n, vector<int>(26));
+        //[i][j] position of this vector would tell how many jth alphabet 
+        //are present in the ith row
+
+        //for example : for these strings
+        // a c c a
+        // b b b b
+        // c a c a
+        // letterCount matrix would be 
+        //   a b c d ...
+        // 0 1 1 1 0
+        // 1 1 1 1 0
+        // 2 0 1 2 0
+        // 3 2 1 0 0
+
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < m; j++)
+                letterCount[i][words[j][i] - 'a']++;           
+
+
+        return findWays(letterCount, target, 0, 0, memo);
+    }
+};
