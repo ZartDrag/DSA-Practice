@@ -1,0 +1,36 @@
+class Solution {
+public:
+    bool isPowerOfFour(int n) {
+        return n > 0 && !(n & (n - 1)) && (n & 0x55555555) == n;
+        //0x55555555 is a mask where all the odd bits are set
+    }
+};
+
+
+
+class Solution {
+public:
+    bool isPowerOfFour(int n) {
+        if(n > 0 && (n & n - 1))
+            return false;
+
+        while(n > 1){
+            n >>= 2;
+        }
+        return n == 1;
+    }
+};
+
+
+
+class Solution {
+public:
+    bool isPowerOfFour(int n) {
+        while(n > 1){
+            if(n & 11)
+                return false;
+            n >>= 2;
+        }
+        return n == 1;
+    }
+};
