@@ -1,0 +1,26 @@
+class Solution {
+    int maxSum(vector<int> &nums, int k, int ind, int prev, vector<vector<int>> &memo){
+        if(ind == nums.size() || (prev != -1 && ind - prev > k))
+            return 0;
+        
+        if(memo[ind][prev + 1] != -1)
+            return memo[ind][prev];
+        
+        int inc = maxSum(nums, k, ind + 1, ind, memo) + nums[ind];
+
+        int exc = maxSum(nums, k, ind + 1, prev, memo);
+
+        return memo[ind][prev + 1] = max(inc, exc);
+    }
+public:
+    int constrainedSubsetSum(vector<int>& nums, int k) {
+        vector<vector<int>> memo(nums.size(), vector<int>(nums.size() + 1, -1));
+
+        int res = maxSum(nums, k, 0, -1, memo);
+
+        if(res <= 0)
+            return *max_element(nums.begin(), nums.end());
+        
+        return res;
+    }
+};
