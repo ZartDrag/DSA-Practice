@@ -1,0 +1,82 @@
+class Solution {
+    struct bus{
+        vector<int> adj;            //the buses this bus is connected to via some stop
+        unordered_set<int> stops;   //the stops this bus will stop at
+    };
+
+    bool haveCommonStop(bus &s1, bus &s2){  
+    //will tell if 2 buses have a common stop i.e., if they are connected
+        for(int stop : s1.stops){
+            if(s2.stops.count(stop))
+                return true;
+        }
+        return false;
+    }
+
+public:
+    int numBusesToDestination(vector<vector<int>>& routes, int source, int target) {
+        if(source == target)
+            return 0;
+
+        int n = routes.size();
+        vector<bus> routeMap(n);        //keeps track of all buses
+        vector<int> sources;            //the buses stopping at the source stop
+
+        for(int i = 0; i < n; i++){
+            for(int st : routes[i])
+                routeMap[i].stops.insert(st);
+
+            if(routeMap[i].stops.count(source))   //check whether this bus stops at the source stop
+                sources.push_back(i);
+
+            for(int j = 0; j < i; j++){
+                if(haveCommonStop(routeMap[i], routeMap[j])){
+                    //if the buses have a common stop, put them in each other's adj lists
+                    routeMap[i].adj.push_back(j);
+                    routeMap[j].adj.push_back(i);
+                }
+            }
+        }
+
+        queue<int> que;
+        //start BFS from all source buses
+
+        vector<bool> vis(n, false);
+
+        for(int s : sources){
+            vis[s] = true;
+            que.push(s);
+        }
+
+        que.push(-1);
+        //will act as a indicator that a bus change is required
+        int changes = 1;
+
+        while(que.size()){
+            int stop = que.front();
+            que.pop();
+
+            if(stop == -1){
+                if(que.empty())
+                    break;
+                que.push(-1);
+                changes++;
+                continue;
+            }
+
+            if(routeMap[stop].stops.count(target)){
+                return changes;
+            }
+            
+            for(int s : routeMap[stop].adj){
+                if(!vis[s]){
+                    que.push(s);
+                    vis[s] = true;
+                }
+            }
+        }
+
+        return -1;       
+
+    }
+};
